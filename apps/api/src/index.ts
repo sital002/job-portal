@@ -1,25 +1,14 @@
-import express from "express";
-import cors from "cors";
-import { logger } from "./utils/logger";
-import { globalErrorHandler } from "./utils/globalErrorHandler";
-import cookieParser from "cookie-parser";
+import app from "./app";
+import { connectDatabase } from "./db/connect-database";
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-app.use(
-  cors({
-    origin: ["http://localhost:5173"],
-    credentials: true,
-  }),
-);
+const PORT = process.env.PORT || 8000;
 
-app.use(logger);
-
-app.use(express.json());
-app.use(cookieParser());
-
-app.use(globalErrorHandler);
-
-app.listen(PORT, () => {
-  console.log("Server is running on port 5000");
-});
+connectDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server is running on port ", PORT);
+    });
+  })
+  .catch((error) => {
+    console.error("Error connecting to database: ", error);
+  });

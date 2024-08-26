@@ -9,25 +9,37 @@ import { ApiResponse } from "../utils/ApiResponse";
 const signUpSchema = z
   .object({
     displayName: z
-      .string()
+      .string({
+        required_error: "displayName is required",
+      })
       .min(2, "Name must be at least 2 characters long")
       .max(64, "Name name must be at most 64 characters long"),
     email: z.string().email({
       message: "Please provide a valid email address",
     }),
     password: z
-      .string()
+      .string({
+        required_error: "Password is required",
+      })
       .min(8, "Password must be at least 8 characters long")
       .max(64, "Password must be at most 64 characters long"),
     confirmPassword: z
-      .string()
+      .string({
+        required_error: "Confirm password is required",
+      })
       .min(8, "Confirm password must be at least 8 characters long")
       .max(64, "Confirm password must be at most 64 characters long"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Password and confirm password must match",
     path: ["confirmPassword"],
   });
+
+const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+};
 
 export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
   const result = signUpSchema.safeParse(req.body);
@@ -46,9 +58,14 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
     verificationToken,
   });
   if (!newUser) throw new ApiError(500, "Failed to create user");
+
+  const accessToken = newUser.generateAccessToken();
+  const refresh_token = newUser.generateAccessToken();
   return res
     .status(201)
-    .json(new ApiResponse("User created successfully", newUser));
+    .cookie("access_token", accessToken, cookieOptions)
+    .cookie("refresh_token", refresh_token, cookieOptions)
+    .json(new ApiResponse("Signup successfully", newUser));
 });
 
 const signInSchema = z.object({
@@ -72,14 +89,8 @@ export const signIn = asyncApiHandler(async (req: Request, res: Response) => {
   const isPasswordMatch = await user.comparePassword(password);
   if (!isPasswordMatch) throw new ApiError(401, "Invalid email or password");
 
-  const cookieOptions: CookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  };
-
-  const accessToken = "test";
-  const refresh_token = "test";
+  const accessToken = user.generateAccessToken();
+  const refresh_token = user.generateAccessToken();
   return res
     .status(200)
     .cookie("access_token", accessToken, cookieOptions)

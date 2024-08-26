@@ -1,29 +1,19 @@
-import { faker } from "@faker-js/faker";
-import UserModel from "./model/user.model";
-import { env } from "../utils/env";
 import mongoose from "mongoose";
 
-function createUser(total: number) {
-  let users = [];
-  for (let i = 0; i < total; i++) {
-    users.push({
-      displayName: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      verificationToken: crypto.randomUUID(),
-    });
-  }
-  return users;
-}
-async function seedDatabase() {
-  const users = createUser(10);
+import UserModel from "./model/user.model";
+import { env } from "../utils/env";
+import users from "./data/user.json";
 
+export async function seedDatabase() {
   const db = await mongoose.connect(env.DATABASE_URL);
   if (!db) throw new Error("Error connecting to database");
   const deleteUsers = await UserModel.deleteMany({});
   if (!deleteUsers) throw new Error("Error deleting users");
-  const newUsers = await UserModel.insertMany(users);
-  if (!newUsers) throw new Error("Error seeding database");
+
+  for (const user of users) {
+    const newUser = await UserModel.create(user);
+    if (!newUser) throw new Error("Error seeding database");
+  }
 }
 
 seedDatabase()

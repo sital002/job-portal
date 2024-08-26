@@ -3,6 +3,7 @@ import cors from "cors";
 import { globalErrorHandler } from "./utils/globalErrorHandler";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
+import UserModel from "./db/model/user.model";
 
 const app = express();
 

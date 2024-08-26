@@ -45,7 +45,6 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
   const result = signUpSchema.safeParse(req.body);
   if (!result.success) throw new ApiError(400, result.error.errors[0].message);
   const { displayName, email, password } = result.data;
-
   const userExists = await UserModel.exists({ email });
   if (userExists) throw new ApiError(409, "User already exists");
 
@@ -65,7 +64,7 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
     .status(201)
     .cookie("access_token", accessToken, cookieOptions)
     .cookie("refresh_token", refresh_token, cookieOptions)
-    .json(new ApiResponse("Signup successfully", newUser));
+    .json(new ApiResponse("Signup successfully"));
 });
 
 const signInSchema = z.object({
@@ -95,7 +94,7 @@ export const signIn = asyncApiHandler(async (req: Request, res: Response) => {
     .status(200)
     .cookie("access_token", accessToken, cookieOptions)
     .cookie("refresh_token", refresh_token, cookieOptions)
-    .json(new ApiResponse("Sign in successful", user));
+    .json(new ApiResponse("Signin successfully"));
 });
 
 export const verifyEmail = asyncApiHandler(

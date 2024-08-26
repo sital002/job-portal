@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon",
-    "prod": "ts-node --project tsconfig.json src/index.ts"
+    "prod": "ts-node --project tsconfig.json src/index.ts",
+    "seed":"ts-node ./src/db/seed.ts",
+    "postinstall": "dotenv -e ts-node ./src/db/seed.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

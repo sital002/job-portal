@@ -15,4 +15,13 @@ const envSchema = z.object({
   EMAIL_PASSWORD: z.string(),
   EMAIL_SENDER: z.string(),
 });
-export const env = envSchema.parse(process.env);
+
+function parseEnv() {
+  const result = envSchema.safeParse(process.env);
+  if (!result.success)
+    throw new Error(
+      "Missing Environement variable" + result.error.errors[0].message,
+    );
+  return result.data;
+}
+export const env = parseEnv();

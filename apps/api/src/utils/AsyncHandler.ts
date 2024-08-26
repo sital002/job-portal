@@ -3,10 +3,10 @@ import { NextFunction, Request, Response } from "express";
 export type FunctionType = (
   req: Request,
   res: Response,
-  next: NextFunction
-) => Promise<any>;
+  next: NextFunction,
+) => Promise<unknown>;
 
-export const asyncHandler = (func: FunctionType) => {
+export const asyncApiHandler = (func: FunctionType) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await func(req, res, next);

@@ -1,12 +1,12 @@
 // index.d.ts
-import { User } from "@prisma/client";
 import { Request } from "express";
+import { IUser } from "../../db/model/user.model";
 export {};
 
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user?: IUser;
     }
   }
 }

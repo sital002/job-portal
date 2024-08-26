@@ -9,6 +9,6 @@ connectDatabase()
       console.log("Server is running on port ", PORT);
     });
   })
-  .catch((error) => {
+  .catch((error: unknown) => {
     console.error("Error connecting to database: ", error);
   });

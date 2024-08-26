@@ -18,6 +18,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
+app.get("/", async (req, res) => {
+  const users = await UserModel.find();
+  res.status(200).send(users);
+});
 
 app.use(globalErrorHandler);
 

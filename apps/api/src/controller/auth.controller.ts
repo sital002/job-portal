@@ -5,6 +5,8 @@ import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import UserModel from "../db/model/user.model";
 import { ApiResponse } from "../utils/ApiResponse";
+import { createTransport } from "../utils/nodemailer.config";
+import { env } from "../utils/env";
 
 const signUpSchema = z
   .object({
@@ -60,6 +62,16 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
 
   const accessToken = newUser.generateAccessToken();
   const refresh_token = newUser.generateAccessToken();
+  createTransport.sendMail({
+    to: email,
+    from: env.EMAIL_USER,
+    subject: "Email verification",
+    html: `<h1>Email verification</h1>
+  <p>Click the link below to verify your email</p>
+  <a href="${env.BASE_URL}/api/v1/auth/verify-email?token=${verificationToken}">Verify email</a>
+  `,
+  });
+
   return res
     .status(201)
     .cookie("access_token", accessToken, cookieOptions)
@@ -103,7 +115,6 @@ export const verifyEmail = asyncApiHandler(
     const incomingToken = req.query.token;
     if (!incomingToken)
       throw new ApiError(400, "Verification token is required");
-
     const user = await UserModel.findById(req.user._id);
     if (!user) throw new ApiError(400, "User doesn't exists");
     if (user.emailVerified)
@@ -113,6 +124,6 @@ export const verifyEmail = asyncApiHandler(
     user.emailVerified = true;
     const verifiedEmail = await user.save();
     if (!verifiedEmail) throw new ApiError(500, "Error verifying email");
-    return res.status(200).json(new ApiResponse("Email verified successfully"));
+    return res.status(200).send("Email verified successfully");
   },
 );

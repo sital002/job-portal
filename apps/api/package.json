@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "nodemon",
     "prod": "ts-node --project tsconfig.json src/index.ts",
-    "seed":"ts-node ./src/db/seed.ts",
+    "seed": "ts-node ./src/db/seed.ts",
     "postinstall": "dotenv -e ts-node ./src/db/seed.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

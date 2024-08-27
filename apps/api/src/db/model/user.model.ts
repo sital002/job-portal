@@ -6,7 +6,7 @@ import { env } from "../../utils/env";
 export interface IUser extends Document {
   email: string;
   password: string;
-  role: "ADMIN" | "USER";
+  role: "ADMIN" | "USER" | "RECRUITER";
   emailVerified: boolean;
   profileUrl?: string;
   displayName: string;
@@ -33,7 +33,7 @@ const userSchema: Schema<IUser> = new Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER"],
+      enum: ["ADMIN", "USER", "RECRUITER"],
       required: true,
       default: "USER",
     },
@@ -65,9 +65,7 @@ const userSchema: Schema<IUser> = new Schema(
   { timestamps: true },
 );
 
-userSchema.methods.comparePassword = async function (
-  password: string,
-): Promise<boolean> {
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 

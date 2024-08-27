@@ -5,6 +5,8 @@ import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import UserModel from "../db/model/user.model";
 import { ApiResponse } from "../utils/ApiResponse";
+import { createTransport } from "../utils/nodemailer.config";
+import { env } from "../utils/env";
 
 const signUpSchema = z
   .object({
@@ -45,6 +47,7 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
   const result = signUpSchema.safeParse(req.body);
   if (!result.success) throw new ApiError(400, result.error.errors[0].message);
   const { displayName, email, password } = result.data;
+
   const userExists = await UserModel.exists({ email });
   if (userExists) throw new ApiError(409, "User already exists");
 
@@ -60,6 +63,16 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
 
   const accessToken = newUser.generateAccessToken();
   const refresh_token = newUser.generateAccessToken();
+  createTransport.sendMail({
+    to: email,
+    from: env.EMAIL_USER,
+    subject: "Email verification",
+    html: `<h1>Email verification</h1>
+  <p>Click the link below to verify your email</p>
+  <a href="${env.BASE_URL}/api/v1/auth/verify-email?token=${verificationToken}">Verify email</a>
+  `,
+  });
+
   return res
     .status(201)
     .cookie("access_token", accessToken, cookieOptions)
@@ -68,11 +81,19 @@ export const signUp = asyncApiHandler(async (req: Request, res: Response) => {
 });
 
 const signInSchema = z.object({
-  email: z.string().email({
-    message: "Please provide a valid email address",
-  }),
+  email: z
+    .string({
+      required_error: "email field is missing",
+    })
+    .min(1, "Email is required")
+    .email({
+      message: "Please provide a valid email address",
+    }),
   password: z
-    .string()
+    .string({
+      required_error: "password field is missing",
+    })
+    .min(1, "Password is required")
     .min(8, "Password must be at least 8 characters long")
     .max(64, "Password must be at most 64 characters long"),
 });
@@ -97,22 +118,16 @@ export const signIn = asyncApiHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse("Signin successfully"));
 });
 
-export const verifyEmail = asyncApiHandler(
-  async (req: Request, res: Response) => {
-    if (!req.user) throw new ApiError(401, "You are not logged in");
-    const incomingToken = req.query.token;
-    if (!incomingToken)
-      throw new ApiError(400, "Verification token is required");
-
-    const user = await UserModel.findById(req.user._id);
-    if (!user) throw new ApiError(400, "User doesn't exists");
-    if (user.emailVerified)
-      throw new ApiError(400, "Email is already verified");
-    if (user.verificationToken !== incomingToken)
-      throw new ApiError(400, "Invalid token");
-    user.emailVerified = true;
-    const verifiedEmail = await user.save();
-    if (!verifiedEmail) throw new ApiError(500, "Error verifying email");
-    return res.status(200).json(new ApiResponse("Email verified successfully"));
-  },
-);
+export const verifyEmail = asyncApiHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const incomingToken = req.query.token;
+  if (!incomingToken) throw new ApiError(400, "Verification token is required");
+  const user = await UserModel.findById(req.user._id);
+  if (!user) throw new ApiError(400, "User doesn't exists");
+  if (user.emailVerified) throw new ApiError(400, "Email is already verified");
+  if (user.verificationToken !== incomingToken) throw new ApiError(400, "Invalid token");
+  user.emailVerified = true;
+  const verifiedEmail = await user.save();
+  if (!verifiedEmail) throw new ApiError(500, "Error verifying email");
+  return res.status(200).send("Email verified successfully");
+});

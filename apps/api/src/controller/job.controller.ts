@@ -58,3 +58,10 @@ export const createJob = asyncApiHandler(async (req, res) => {
   if (!job) throw new ApiError(500, "Error creating job");
   res.status(201).json(new ApiResponse("Job created successfully", job));
 });
+
+export const getJobById = asyncApiHandler(async (req, res) => {
+  if (!req.params.id) throw new ApiError(400, "Job id is required");
+  const job = await JobModel.findById(req.params.id).populate("user");
+  if (!job) throw new ApiError(404, "Job not found");
+  res.status(200).json(new ApiResponse("Job retrieved successfully", job));
+});

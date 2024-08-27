@@ -4,19 +4,20 @@ import UserModel from "./model/user.model";
 import { env } from "../utils/env";
 import users from "./data/user.json";
 
-export async function seedDatabase() {
-  const db = await mongoose.connect(env.DATABASE_URL);
-  if (!db) throw new Error("Error connecting to database");
+export async function seedDatabase(DB_URL: string) {
+  if (mongoose.connection.readyState === 0) {
+    const db = await mongoose.connect(DB_URL);
+    if (!db) throw new Error("Error connecting to database");
+  }
   const deleteUsers = await UserModel.deleteMany({});
   if (!deleteUsers) throw new Error("Error deleting users");
-
-  for (const user of users) {
-    const newUser = await UserModel.create(user);
-    if (!newUser) throw new Error("Error seeding database");
+  if (deleteUsers) {
+    const createdUsers = await UserModel.create(users);
+    if (!createdUsers) throw new Error("Error creating users");
   }
 }
 
-seedDatabase()
+seedDatabase(env.DATABASE_URL)
   .then(() => {
     console.log("Database seeded successfully");
   })

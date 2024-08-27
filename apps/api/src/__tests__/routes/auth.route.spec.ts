@@ -5,11 +5,25 @@ import { seedDatabase } from "../../db/seed";
 import { env } from "../../utils/env";
 
 beforeAll(async () => {
-  await mongoose.connect(env.DATABASE_URL);
+  try {
+    await seedDatabase(env.TEST_DATABASE_URL);
+    console.log("Database seeded successfully");
+  } catch (error) {
+    console.error("Error setting up database", error);
+    throw error;
+  }
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  try {
+    // await mongoose.connection.dropDatabase();
+    console.log("Database dropped successfully");
+    await mongoose.connection.close();
+    console.log("Database connection closed successfully");
+  } catch (error) {
+    console.error("Error tearing down database", error);
+    throw error;
+  }
 });
 
 describe("Signin Controller", () => {
@@ -47,5 +61,41 @@ describe("Signin Controller", () => {
     });
     expect(response.body).toHaveProperty("message");
     expect(response.statusCode).toBe(200);
+  });
+});
+
+describe("Signup Controller", () => {
+  it("should return 400 for signup with invalid data", async () => {
+    const response = await request(app).post("/api/v1/auth/signup").send({
+      email: "invalid-email",
+      password: "short",
+      displayName: "",
+      confirmPassword: "short",
+    });
+    expect(response.body).toHaveProperty("message");
+    expect(response.statusCode).toBe(400);
+  });
+
+  it("should return 409 for signup with existing email", async () => {
+    const response = await request(app).post("/api/v1/auth/signup").send({
+      displayName: "Test User",
+      email: "testuser1@example.com",
+      password: "password123",
+      confirmPassword: "password123",
+    });
+    expect(response.body).toHaveProperty("message");
+    expect(response.statusCode).toBe(409);
+  });
+
+  it("should return 201 for successful signup", async () => {
+    const response = await request(app).post("/api/v1/auth/signup").send({
+      email: "newuser500@example.com",
+      displayName: "New User",
+      password: "password123",
+      confirmPassword: "password123",
+    });
+    expect(response.body).toHaveProperty("message");
+    expect(response.statusCode).toBe(201);
+    expect(response.headers["set-cookie"]).toBeDefined();
   });
 });

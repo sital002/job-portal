@@ -6,8 +6,8 @@
     "dev": "nodemon",
     "prod": "ts-node --project tsconfig.json src/index.ts",
     "seed": "ts-node ./src/db/seed.ts",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --detectOpenHandles --watch",
     "postinstall": "ts-node ./src/db/seed.ts"
   },
   "dependencies": {

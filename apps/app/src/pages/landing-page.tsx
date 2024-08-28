@@ -1,46 +1,12 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Briefcase, Users, TrendingUp, Search, PlusCircle } from "lucide-react";
-import { NavLink } from "react-router-dom";
+
+import Header from "../components/header/header";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">
-      <header className="container mx-auto px-4 py-6">
-        <nav className="flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-3xl font-bold text-blue-600">JobHub</h1>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-x-6"
-          >
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 transition duration-300"
-            >
-              How It Works
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-blue-600 transition duration-300"
-            >
-              About Us
-            </a>
-            <NavLink
-              to={"/login"}
-              className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300"
-            >
-              Sign In
-            </NavLink>
-          </motion.div>
-        </nav>
-      </header>
+      <Header />
 
       <main className="container mx-auto px-4 py-12">
         <motion.section
@@ -63,7 +29,9 @@ export default function LandingPage() {
               whileTap={{ scale: 0.95 }}
             >
               <Search className="w-5 h-5" />
-              <span>Find Jobs</span>
+              <span>
+                <Link to="/jobs"> Find Jobs</Link>
+              </span>
             </motion.a>
             <motion.a
               href="#"

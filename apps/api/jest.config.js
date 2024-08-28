@@ -4,5 +4,6 @@ module.exports = {
   testEnvironment: "node",
   moduleFileExtensions: ["ts", "js"],
   testMatch: ["**/?(*.)+(spec|test).ts"],
+  setupFilesAfterEnv: ["./src/__tests__/setup-test.ts"],
   detectOpenHandles: true,
 };

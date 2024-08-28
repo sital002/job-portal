@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 import UserModel from "./model/user.model";
 import { env } from "../utils/env";
-import users from "./data/user.json";
 import JobModel from "./model/job.model";
+import users from "./data/user.json";
 import jobs from "./data/jobs.json";
 
 export async function seedDatabase(DB_URL: string) {

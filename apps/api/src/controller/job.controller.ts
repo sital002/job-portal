@@ -3,6 +3,7 @@ import JobModel from "../db/model/job.model";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
+import mongoose from "mongoose";
 
 export const browseJobs = asyncApiHandler(async (_req, res) => {
   const jobs = await JobModel.find().populate("user");
@@ -47,7 +48,7 @@ export const createJob = asyncApiHandler(async (req, res) => {
   const result = jobSchema.safeParse(req.body);
   if (!result.success) throw new ApiError(400, result.error.errors[0].message);
 
-  const job = await JobModel.create({
+  const jobs = await JobModel.create({
     title: result.data.title,
     user: req.user._id,
     description: result.data.description,
@@ -55,12 +56,14 @@ export const createJob = asyncApiHandler(async (req, res) => {
     location: result.data.location,
     salary: result.data.salary,
   });
-  if (!job) throw new ApiError(500, "Error creating job");
-  res.status(201).json(new ApiResponse("Job created successfully", job));
+  if (!jobs) throw new ApiError(500, "Error creating job");
+  res.status(201).json(new ApiResponse("Job created successfully", jobs));
 });
 
 export const getJobById = asyncApiHandler(async (req, res) => {
-  if (!req.params.id) throw new ApiError(400, "Job id is required");
+  const id = req.params.id;
+  if (!id) throw new ApiError(400, "Job id is required");
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
   const job = await JobModel.findById(req.params.id).populate("user");
   if (!job) throw new ApiError(404, "Job not found");
   res.status(200).json(new ApiResponse("Job retrieved successfully", job));

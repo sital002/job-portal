@@ -1,0 +1,102 @@
+[
+    {
+        "email": "testuser1@example.com",
+        "password": "password123",
+        "role": "RECRUITER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/1.jpg",
+        "displayName": "testuser1",
+        "status": "ACTIVE",
+        "verificationToken": "a1b2c3d4-e5f6-7g8h-9i10-jk11lm12no13"
+    },
+    {
+        "email": "adminuser@example.com",
+        "password": "adminpass456",
+        "role": "ADMIN",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/2.jpg",
+        "displayName": "adminuser",
+        "status": "ACTIVE",
+        "verificationToken": "b1c2d3e4-f5g6-h7i8-j9k10-lm11no12p13q"
+    },
+    {
+        "email": "testuser2@example.com",
+        "password": "password456",
+        "role": "USER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/3.jpg",
+        "displayName": "testuser2",
+        "status": "ACTIVE",
+        "verificationToken": "c1d2e3f4-g5h6-i7j8-k9l10-mn11op12q13r"
+    },
+    {
+        "email": "user3@example.com",
+        "password": "userpass789",
+        "role": "USER",
+        "emailVerified": false,
+        "profileUrl": "https://randomuser.me/api/portraits/women/1.jpg",
+        "displayName": "user3",
+        "status": "INACTIVE",
+        "verificationToken": "d1e2f3g4-h5i6-j7k8-l9m10-np11qr12s13t"
+    },
+    {
+        "email": "user4@example.com",
+        "password": "pass1234",
+        "role": "RECRUITER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/women/2.jpg",
+        "displayName": "user4",
+        "status": "ACTIVE",
+        "verificationToken": "e1f2g3h4-i5j6-k7l8-m9n10-op11qr12s13t"
+    },
+    {
+        "email": "user5@example.com",
+        "password": "mypassword",
+        "role": "USER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/4.jpg",
+        "displayName": "user5",
+        "status": "SUSPENDED",
+        "verificationToken": "f1g2h3i4-j5k6-l7m8-n9o10-pq11rs12t13u"
+    },
+    {
+        "email": "admin2@example.com",
+        "password": "admin7890",
+        "role": "ADMIN",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/5.jpg",
+        "displayName": "admin2",
+        "status": "ACTIVE",
+        "verificationToken": "g1h2i3j4-k5l6-m7n8-o9p10-qr11st12u13v"
+    },
+    {
+        "email": "testuser3@example.com",
+        "password": "test1234",
+        "role": "USER",
+        "emailVerified": false,
+        "profileUrl": "https://randomuser.me/api/portraits/women/3.jpg",
+        "displayName": "testuser3",
+        "status": "ACTIVE",
+        "verificationToken": "h1i2j3k4-l5m6-n7o8-p9q10-rs11tu12v13w"
+    },
+    {
+        "email": "user6@example.com",
+        "password": "userpass456",
+        "role": "RECRUITER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/women/4.jpg",
+        "displayName": "user6",
+        "status": "INACTIVE",
+        "verificationToken": "i1j2k3l4-m5n6-o7p8-q9r10-st11uv12w13x"
+    },
+    {
+        "email": "user7@example.com",
+        "password": "password789",
+        "role": "RECRUITER",
+        "emailVerified": true,
+        "profileUrl": "https://randomuser.me/api/portraits/men/6.jpg",
+        "displayName": "user7",
+        "status": "ACTIVE",
+        "verificationToken": "j1k2l3m4-n5o6-p7q8-r9s10-tuv11w12x13y"
+    }
+]

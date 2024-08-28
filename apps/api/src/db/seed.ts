@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import UserModel from "./model/user.model";
 import { env } from "../utils/env";
 import users from "./data/user.json";
+import JobModel from "./model/job.model";
+import jobs from "./data/jobs.json";
 
 export async function seedDatabase(DB_URL: string) {
   if (mongoose.connection.readyState === 0) {
@@ -10,10 +12,12 @@ export async function seedDatabase(DB_URL: string) {
     if (!db) throw new Error("Error connecting to database");
   }
   const deleteUsers = await UserModel.deleteMany({});
-  if (!deleteUsers) throw new Error("Error deleting users");
+  const deletedJobs = await JobModel.deleteMany({});
+  if (!deleteUsers && !deletedJobs) throw new Error("Error deleting users");
   if (deleteUsers) {
     const createdUsers = await UserModel.create(users);
-    if (!createdUsers) throw new Error("Error creating users");
+    const createdJobs = await JobModel.create(jobs);
+    if (!createdUsers && createdJobs) throw new Error("Error creating users");
   }
 }
 

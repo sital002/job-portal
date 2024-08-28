@@ -15,7 +15,7 @@ export interface Ijob {
 const jobSchema = new Schema<Ijob>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  user: { type: Schema.Types.ObjectId, ref: "User" },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: [true, "UserId is required"] },
   company: { type: String, required: true },
   location: { type: String, required: true },
   salary: { type: Number, required: true },

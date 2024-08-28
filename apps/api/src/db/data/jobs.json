@@ -1,0 +1,167 @@
+[
+    {
+        "title": "Frontend Developer",
+        "description": "Responsible for developing user-facing features.",
+        "company": "Tech Innovators",
+        "location": "San Francisco, CA",
+        "salary": 120000,
+        "createdAt": "2024-08-01T00:00:00.000Z",
+        "updatedAt": "2024-08-01T00:00:00.000Z",
+        "deletedAt": "2024-08-01T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "Backend Developer",
+        "description": "Develop and maintain server-side logic.",
+        "company": "Web Solutions",
+        "location": "New York, NY",
+        "salary": 110000,
+        "createdAt": "2024-08-02T00:00:00.000Z",
+        "updatedAt": "2024-08-02T00:00:00.000Z",
+        "deletedAt": "2024-08-02T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Data Scientist",
+        "description": "Analyze data and create predictive models.",
+        "company": "DataCorp",
+        "location": "Boston, MA",
+        "salary": 130000,
+        "createdAt": "2024-08-03T00:00:00.000Z",
+        "updatedAt": "2024-08-03T00:00:00.000Z",
+        "deletedAt": "2024-08-03T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "Project Manager",
+        "description": "Oversee project timelines and deliverables.",
+        "company": "Global Enterprises",
+        "location": "Chicago, IL",
+        "salary": 90000,
+        "createdAt": "2024-08-04T00:00:00.000Z",
+        "updatedAt": "2024-08-04T00:00:00.000Z",
+        "deletedAt": "2024-08-04T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Product Designer",
+        "description": "Design and improve user experience.",
+        "company": "Design Studios",
+        "location": "Los Angeles, CA",
+        "salary": 95000,
+        "createdAt": "2024-08-05T00:00:00.000Z",
+        "updatedAt": "2024-08-05T00:00:00.000Z",
+        "deletedAt": "2024-08-05T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "DevOps Engineer",
+        "description": "Ensure efficient software deployment and operations.",
+        "company": "Cloud Services",
+        "location": "Seattle, WA",
+        "salary": 115000,
+        "createdAt": "2024-08-06T00:00:00.000Z",
+        "updatedAt": "2024-08-06T00:00:00.000Z",
+        "deletedAt": "2024-08-06T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Full Stack Developer",
+        "description": "Develop both client-side and server-side software.",
+        "company": "Tech Innovators",
+        "location": "San Francisco, CA",
+        "salary": 125000,
+        "createdAt": "2024-08-07T00:00:00.000Z",
+        "updatedAt": "2024-08-07T00:00:00.000Z",
+        "deletedAt": "2024-08-07T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "System Administrator",
+        "description": "Manage and maintain IT infrastructure.",
+        "company": "Network Solutions",
+        "location": "Dallas, TX",
+        "salary": 105000,
+        "createdAt": "2024-08-08T00:00:00.000Z",
+        "updatedAt": "2024-08-08T00:00:00.000Z",
+        "deletedAt": "2024-08-08T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Software Architect",
+        "description": "Design high-level software architecture.",
+        "company": "Innovatech",
+        "location": "Austin, TX",
+        "salary": 135000,
+        "createdAt": "2024-08-09T00:00:00.000Z",
+        "updatedAt": "2024-08-09T00:00:00.000Z",
+        "deletedAt": "2024-08-09T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "UI/UX Designer",
+        "description": "Create user-friendly interfaces.",
+        "company": "Creative Minds",
+        "location": "Miami, FL",
+        "salary": 92000,
+        "createdAt": "2024-08-10T00:00:00.000Z",
+        "updatedAt": "2024-08-10T00:00:00.000Z",
+        "deletedAt": "2024-08-10T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Data Analyst",
+        "description": "Interpret and analyze complex data sets.",
+        "company": "Insight Analytics",
+        "location": "Denver, CO",
+        "salary": 85000,
+        "createdAt": "2024-08-11T00:00:00.000Z",
+        "updatedAt": "2024-08-11T00:00:00.000Z",
+        "deletedAt": "2024-08-11T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "Machine Learning Engineer",
+        "description": "Develop machine learning models.",
+        "company": "AI Solutions",
+        "location": "Palo Alto, CA",
+        "salary": 140000,
+        "createdAt": "2024-08-12T00:00:00.000Z",
+        "updatedAt": "2024-08-12T00:00:00.000Z",
+        "deletedAt": "2024-08-12T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Quality Assurance Engineer",
+        "description": "Test and ensure software quality.",
+        "company": "QA Masters",
+        "location": "San Diego, CA",
+        "salary": 88000,
+        "createdAt": "2024-08-13T00:00:00.000Z",
+        "updatedAt": "2024-08-13T00:00:00.000Z",
+        "deletedAt": "2024-08-13T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    },
+    {
+        "title": "Cybersecurity Specialist",
+        "description": "Protect systems from cyber threats.",
+        "company": "SecureTech",
+        "location": "Washington, D.C.",
+        "salary": 125000,
+        "createdAt": "2024-08-14T00:00:00.000Z",
+        "updatedAt": "2024-08-14T00:00:00.000Z",
+        "deletedAt": "2024-08-14T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad94"
+    },
+    {
+        "title": "Business Analyst",
+        "description": "Identify business needs and propose solutions.",
+        "company": "Biz Solutions",
+        "location": "Atlanta, GA",
+        "salary": 90000,
+        "createdAt": "2024-08-15T00:00:00.000Z",
+        "updatedAt": "2024-08-15T00:00:00.000Z",
+        "deletedAt": "2024-08-15T00:00:00.000Z",
+        "user": "66cf362ccdaacb0a0836ad90"
+    }
+]

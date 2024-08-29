@@ -5,32 +5,48 @@ import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import mongoose from "mongoose";
 
-const browseJobsSchema = z.object({
-  location: z.string().optional(),
-  minSalary: z
-    .string()
-    .refine((value) => Number(value), {
-      message: "minSalary must be a number",
-      path: ["minSalary"],
-    })
-    .optional(),
-  maxSalary: z
-    .string()
-    .refine((value) => Number(value), {
-      message: "maxSalary must be a number",
-      path: ["maxSalary"],
-    })
-    .optional(),
-  title: z.string().optional(),
-  jobType: z.string().optional(),
-  datePosted: z
-    .string()
-    .refine((value) => Number(value), {
-      message: "datePosted must be a number",
-      path: ["datePosted"],
-    })
-    .optional(),
-});
+const browseJobsSchema = z
+  .object({
+    location: z.string().min(3, "Location must be atleast 3 character long").optional(),
+    jobType: z
+      .enum(["full-time", "part-time", "contract", "internship"], {
+        message: "Invalid job type",
+      })
+      .optional(),
+    minSalary: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "minSalary must be a number",
+        path: ["minSalary"],
+      }),
+    maxSalary: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "maxSalary must be a number",
+        path: ["maxSalary"],
+      }),
+    title: z.string().optional(),
+    datePosted: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "datePosted must be a number",
+        path: ["datePosted"],
+      })
+      .refine((value) => value === undefined || value <= Date.now(), {
+        message: "datePosted cannot be in the future",
+        path: ["datePosted"],
+      }),
+  })
+  .refine((data) => data.maxSalary === undefined || data.minSalary === undefined || data.maxSalary >= data.minSalary, {
+    message: "maxSalary cannot be less than minSalary",
+    path: ["maxSalary"],
+  });
 
 export const browseJobs = asyncApiHandler(async (req, res) => {
   const result = browseJobsSchema.safeParse(req.query);
@@ -45,6 +61,7 @@ export const browseJobs = asyncApiHandler(async (req, res) => {
     filter["salaryRange.min"] = { $gte: Number(minSalary) || 0 };
     filter["salaryRange.max"] = { $lte: Number(maxSalary) || Infinity };
   }
+  if (jobType) filter.jobType = jobType;
 
   if (title) filter.title = { $regex: title, $options: "i" };
   if (datePosted) filter.createdAt = { $gte: new Date(new Date().setDate(new Date().getDate() - Number(datePosted))) };
@@ -61,6 +78,9 @@ const jobSchema = z.object({
     })
     .min(2, "Title must be at least 2 characters long")
     .max(64, "Title must be at most 64 characters long"),
+  jobType: z.enum(["full-time", "part-time", "contract", "internship"], {
+    message: "Invalid job type",
+  }),
   description: z
     .string({
       required_error: "Description is required",
@@ -96,6 +116,7 @@ export const createJob = asyncApiHandler(async (req, res) => {
     description: result.data.description,
     company: result.data.company,
     location: result.data.location,
+    jobType: result.data.jobType,
     salaryRange: {
       min: result.data.salary.min,
       max: result.data.salary.max,

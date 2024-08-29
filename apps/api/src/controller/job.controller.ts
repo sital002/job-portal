@@ -62,7 +62,7 @@ export const browseJobs = asyncApiHandler(async (req, res) => {
   if (title) filter.title = { $regex: title, $options: "i" };
   if (datePosted) filter.createdAt = { $gte: new Date(new Date().setDate(new Date().getDate() - Number(datePosted))) };
 
-  const jobs = await JobModel.find(filter).populate("user");
+  const jobs = await JobModel.find(filter).populate("user").exec();
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });
 

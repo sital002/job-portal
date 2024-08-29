@@ -98,7 +98,7 @@ describe("Job Controller", () => {
       expect(response.body.message).toBeDefined();
     });
     it("should return 404 if the job isn't present", async () => {
-      const response = await request(app).get(`${BASE_URL}/browse/66cf3e10ea9c6908602cd09b`);
+      const response = await request(app).get(`${BASE_URL}/browse/aacfddddddddddffffffffff`);
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBeDefined();
     });

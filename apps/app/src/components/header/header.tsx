@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const Header: React.FC = () => {
   return (
-    <header className="container mx-auto px-4 py-6">
+    <header className="container mx-auto px-4 py-6 bg-inherit">
       <nav className="flex items-center justify-between">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

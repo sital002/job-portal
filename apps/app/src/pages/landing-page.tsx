@@ -2,12 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Briefcase, Users, TrendingUp, Search, PlusCircle } from "lucide-react";
 
-import Header from "../components/header/header";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">
-      <Header />
-
       <main className="container mx-auto px-4 py-12">
         <motion.section
           className="text-center mb-20"

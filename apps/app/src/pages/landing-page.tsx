@@ -22,17 +22,17 @@ export default function LandingPage() {
             Connecting talented professionals with amazing job opportunities
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <motion.a
-              href="#"
-              className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Search className="w-5 h-5" />
-              <span>
-                <Link to="/jobs"> Find Jobs</Link>
-              </span>
-            </motion.a>
+            <Link to="/jobs">
+              <motion.a
+                href="#"
+                className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Search className="w-5 h-5" />
+                <span>Find Jobs</span>
+              </motion.a>
+            </Link>
             <motion.a
               href="#"
               className="bg-green-600 text-white px-8 py-3 rounded-full hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"

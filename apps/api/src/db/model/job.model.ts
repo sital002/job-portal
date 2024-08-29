@@ -5,6 +5,7 @@ export interface Ijob {
   description: string;
   company: string;
   location: string;
+  jobType: "full-time" | "part-time" | "contract" | "internship";
   salaryRange: {
     min: number;
     max: number;
@@ -21,6 +22,11 @@ const jobSchema = new Schema<Ijob>({
   user: { type: Schema.Types.ObjectId, ref: "User", required: [true, "UserId is required"] },
   company: { type: String, required: true },
   location: { type: String, required: true },
+  jobType: {
+    type: String,
+    enum: ["full-time", "part-time", "contract", "internship"],
+    required: true,
+  },
   salaryRange: {
     min: { type: Number, required: true },
     max: { type: Number, required: true },

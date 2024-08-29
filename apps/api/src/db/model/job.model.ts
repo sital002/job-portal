@@ -5,7 +5,10 @@ export interface Ijob {
   description: string;
   company: string;
   location: string;
-  salary: number;
+  salaryRange: {
+    min: number;
+    max: number;
+  };
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -18,7 +21,10 @@ const jobSchema = new Schema<Ijob>({
   user: { type: Schema.Types.ObjectId, ref: "User", required: [true, "UserId is required"] },
   company: { type: String, required: true },
   location: { type: String, required: true },
-  salary: { type: Number, required: true },
+  salaryRange: {
+    min: { type: Number, required: true },
+    max: { type: Number, required: true },
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   deletedAt: { type: Date, default: Date.now },

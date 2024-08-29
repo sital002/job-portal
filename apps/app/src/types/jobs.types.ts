@@ -4,7 +4,10 @@ export interface Job {
   description: string;
   company: string;
   location: string;
-  salary: number;
+  salaryRange: {
+    min: number;
+    max: number;
+  };
   type: string;
   createdAt: string;
 }

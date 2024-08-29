@@ -32,7 +32,9 @@ const SingleJob: React.FC = () => {
             <p className="text-gray-700 mb-4">{job?.description}</p>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Salary Range: {job?.salary}</span>
+            <span className="text-gray-600">
+              Salary Range: {job?.salaryRange.min} - {job?.salaryRange.max}
+            </span>
             <button className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
               Apply Now
             </button>

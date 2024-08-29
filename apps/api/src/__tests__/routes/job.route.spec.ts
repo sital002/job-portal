@@ -93,7 +93,7 @@ describe("Job Controller", () => {
 
   describe("GET /jobs/browse/:id", () => {
     it("should return 400 if the job id isn't a valid mongodb id", async () => {
-      const response = await request(app).get(`${BASE_URL}/browse/22`);
+      const response = await request(app).get(`${BASE_URL}/browse/invalid-mongo-db-id`);
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBeDefined();
     });

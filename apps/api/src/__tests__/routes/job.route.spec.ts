@@ -20,6 +20,22 @@ describe("Job Controller", () => {
   });
 
   describe("GET /jobs/browse", () => {
+    it("should return 400 if the maxSalary is less than minSalary", async () => {
+      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=100`);
+      expect(statusCode).toBe(400);
+      expect(body.message).toBeDefined();
+    });
+    it("should return 400 for invalid jobType query params", async () => {
+      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=100000&jobType=invalid-type`);
+      expect(statusCode).toBe(400);
+      expect(body.message).toBeDefined();
+    });
+
+    it("should return 400 if the minSalary or maxSalary isnot a number", async () => {
+      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=not-a-number&jobType=internship`);
+      expect(statusCode).toBe(400);
+      expect(body.message).toBeDefined();
+    });
     it("should return 200 for browsing jobs", async () => {
       const response = await request(app).get(`${BASE_URL}/browse`);
       expect(response.statusCode).toBe(200);

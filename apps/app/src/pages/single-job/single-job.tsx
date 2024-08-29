@@ -23,8 +23,11 @@ const SingleJob: React.FC = () => {
             {job?.title}
           </h1>
           <div className="text-gray-600 mb-4">
-            <p>Tech Innovators - San Francisco, CA</p>
-            <p>Posted on August 1, 2024</p>
+            <p>{job?.company}</p>
+            <p>
+              Posted on{" "}
+              {job?.createdAt && new Date(job.createdAt).toDateString()}
+            </p>
           </div>
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Job Description</h2>

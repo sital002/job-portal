@@ -9,7 +9,7 @@ const SingleJob: React.FC = () => {
   console.log(job);
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white">
       {isLoading && <p>Loading...</p>}
       {error && <p>{error.message}</p>}
       <main className="container mx-auto px-4 py-8 max-w-4xl">

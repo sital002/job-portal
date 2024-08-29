@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const browseJobsSchema = z
   .object({
-    location: z.string().min(3, "Location must be atleast 3 character long").optional(),
+    location: z.string().optional(),
     jobType: z
       .enum(["full-time", "part-time", "contract", "internship"], {
         message: "Invalid job type",
@@ -36,10 +36,6 @@ const browseJobsSchema = z
       .transform((value) => (value ? Number(value) : undefined))
       .refine((value) => value === undefined || !isNaN(value), {
         message: "datePosted must be a number",
-        path: ["datePosted"],
-      })
-      .refine((value) => value === undefined || value <= Date.now(), {
-        message: "datePosted cannot be in the future",
         path: ["datePosted"],
       }),
   })
@@ -129,7 +125,7 @@ export const getJobById = asyncApiHandler(async (req, res) => {
   const id = req.params.id;
   if (!id) throw new ApiError(400, "Job id is required");
   if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
-  const job = await JobModel.findById(req.params.id).populate("user");
+  const job = await JobModel.findById(req.params.id).populate("user").exec();
   if (!job) throw new ApiError(404, "Job not found");
   res.status(200).json(new ApiResponse("Job retrieved successfully", job));
 });

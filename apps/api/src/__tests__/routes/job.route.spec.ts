@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../../app";
+import { Ijob } from "../../db/model/job.model";
 
 let jobId: string;
 
@@ -20,21 +21,66 @@ describe("Job Controller", () => {
   });
 
   describe("GET /jobs/browse", () => {
-    it("should return 400 if the maxSalary is less than minSalary", async () => {
-      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=100`);
-      expect(statusCode).toBe(400);
-      expect(body.message).toBeDefined();
-    });
-    it("should return 400 for invalid jobType query params", async () => {
-      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=100000&jobType=invalid-type`);
-      expect(statusCode).toBe(400);
-      expect(body.message).toBeDefined();
+    describe("GET /jobs/browse?minSalary&maxSalary", () => {
+      it("should return 400 if the maxSalary is less than minSalary", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=100`);
+        expect(statusCode).toBe(400);
+        expect(body.message).toBeDefined();
+      });
+      it("should return 400 if the minSalary and maxSalary isnot a number", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=not-number&maxSalary=not-a-number&jobType=internship`);
+        expect(statusCode).toBe(400);
+        expect(body.message).toBeDefined();
+      });
+      it("should return 200 if the minSalary and maxSalary is present and valid", async () => {
+        const query = {
+          minSalary: 1000,
+          maxSalary: 100000,
+        };
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=${query.minSalary}&maxSalary=${query.maxSalary}`);
+        expect(statusCode).toBe(200);
+        expect(body.data).toBeDefined();
+        expect(body.data).toBeInstanceOf(Array);
+        for (const job of body.data as Ijob[]) {
+          expect(job.salaryRange.min).toBeGreaterThanOrEqual(query.minSalary);
+          expect(job.salaryRange.max).toBeLessThanOrEqual(query.maxSalary);
+        }
+      });
     });
 
-    it("should return 400 if the minSalary or maxSalary isnot a number", async () => {
-      const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?minSalary=1000&maxSalary=not-a-number&jobType=internship`);
-      expect(statusCode).toBe(400);
-      expect(body.message).toBeDefined();
+    describe("GET /jobs/browse?jobType", () => {
+      const jobType = "internship";
+      it("should return 400 for invalid jobType query params", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?jobType=invalid-type`);
+        expect(statusCode).toBe(400);
+        expect(body.message).toBeDefined();
+      });
+      it("should return 200 for valid jobType", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?jobType=${jobType}`);
+        expect(statusCode).toBe(200);
+        expect(body.data).toBeInstanceOf(Array);
+        for (const job of body.data as Ijob[]) {
+          expect(job.jobType).toEqual(jobType);
+        }
+      });
+    });
+
+    describe("GET /jobs/browse datePosted query params", () => {
+      const datePosted = 30;
+      it("should return 400 if datePosted is not number", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?datePosted=not-a-number`);
+        expect(statusCode).toBe(400);
+        expect(body.message).toBeDefined();
+      });
+      it("should return 200 if the datePosted is a valid number", async () => {
+        const { body, statusCode } = await request(app).get(`${BASE_URL}/browse?datePosted=${datePosted}`);
+        expect(statusCode).toBe(200);
+        expect(body.data).toBeDefined();
+        expect(body.data).toBeInstanceOf(Array);
+        for (const job of body.data as Ijob[]) {
+          expect(new Date(job.createdAt).getDate()).toBeLessThanOrEqual(datePosted);
+        }
+      });
     });
     it("should return 200 for browsing jobs", async () => {
       const response = await request(app).get(`${BASE_URL}/browse`);

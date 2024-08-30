@@ -10,8 +10,9 @@
         },
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
+        "jobType": "internship",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Product Manager",
@@ -25,7 +26,8 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "jobType": "internship",
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "Data Scientist",
@@ -39,13 +41,15 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "jobType": "internship",
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "UI/UX Designer",
         "description": "We are looking for a talented UI/UX Designer to create intuitive and visually appealing user interfaces for our products. You will work closely with product managers and engineers to design wireframes, prototypes, and final designs that meet user needs and business goals.\n\nRequirements:\n- 3+ years of experience in UI/UX design\n- Proficiency in design tools like Figma, Sketch, or Adobe XD\n- Strong understanding of user-centered design principles\n- Excellent communication and collaboration skills\n- Ability to create responsive designs for web and mobile platforms",
         "company": "Creative Labs",
         "location": "Austin",
+        "jobType": "full-time",
         "salaryRange": {
             "min": 70000,
             "max": 100000
@@ -53,13 +57,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "DevOps Engineer",
         "description": "We are seeking a DevOps Engineer to join our operations team. You will be responsible for automating and optimizing our software delivery pipeline. You will work closely with developers to ensure smooth deployments and maintain system reliability.\n\nRequirements:\n- 3+ years of experience in DevOps or related fields\n- Proficiency in CI/CD tools like Jenkins, GitLab, or CircleCI\n- Experience with containerization technologies like Docker and Kubernetes\n- Strong scripting skills (Bash, Python, etc.)\n- Knowledge of cloud platforms like AWS, GCP, or Azure",
         "company": "Cloud Solutions Ltd.",
         "location": "Seattle",
+        "jobType": "internship",
         "salaryRange": {
             "min": 85000,
             "max": 125000
@@ -67,13 +72,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Marketing Specialist",
         "description": "We are looking for a Marketing Specialist to join our team. You will be responsible for developing and implementing marketing campaigns, analyzing market trends, and working with cross-functional teams to drive brand awareness and customer engagement.\n\nRequirements:\n- 2+ years of experience in marketing\n- Strong understanding of digital marketing strategies\n- Proficiency in marketing tools like Google Analytics and HubSpot\n- Excellent communication and creative skills\n- Ability to work independently and as part of a team",
         "company": "BrandBoost",
         "location": "Los Angeles",
+        "jobType": "contract",
         "salaryRange": {
             "min": 60000,
             "max": 90000
@@ -81,13 +87,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "HR Manager",
         "description": "We are seeking an experienced HR Manager to oversee all aspects of human resources practices and processes. You will be responsible for recruiting, developing, and managing talent, ensuring compliance with labor laws, and maintaining a positive work environment.\n\nRequirements:\n- 5+ years of experience in human resources\n- Strong understanding of HR best practices and labor laws\n- Excellent communication and leadership skills\n- Experience with HR software and tools\n- Ability to handle confidential information with discretion",
         "company": "PeopleFirst",
         "location": "Boston",
+        "jobType": "contract",
         "salaryRange": {
             "min": 75000,
             "max": 110000
@@ -95,12 +102,13 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Content Writer",
         "description": "We are looking for a creative Content Writer to join our marketing team. You will be responsible for creating engaging content for our blog, website, and social media platforms. You should have a passion for writing and be able to adapt your style to different audiences.\n\nRequirements:\n- 2+ years of experience in content writing or journalism\n- Excellent writing and editing skills\n- Strong understanding of SEO and content marketing strategies\n- Ability to work independently and meet deadlines\n- Experience with content management systems (CMS) like WordPress",
         "company": "WriteNow",
+        "jobType": "contract",
         "location": "Remote",
         "salaryRange": {
             "min": 50000,
@@ -109,13 +117,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "Business Analyst",
         "description": "We are seeking a Business Analyst to join our team. You will be responsible for analyzing business processes, identifying opportunities for improvement, and working with stakeholders to implement changes. You should have strong analytical skills and be able to communicate complex information clearly.\n\nRequirements:\n- 3+ years of experience in business analysis\n- Strong understanding of business processes and workflows\n- Proficiency in data analysis tools like Excel and SQL\n- Excellent communication and presentation skills\n- Ability to work independently and manage multiple projects",
         "company": "BizTech",
         "location": "Dallas",
+        "jobType": "contract",
         "salaryRange": {
             "min": 70000,
             "max": 100000
@@ -123,13 +132,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Sales Manager",
         "description": "We are looking for a dynamic Sales Manager to lead our sales team. You will be responsible for setting sales targets, developing sales strategies, and managing the performance of the sales team. You should have strong leadership skills and a proven track record of achieving sales targets.\n\nRequirements:\n- 5+ years of experience in sales management\n- Strong leadership and communication skills\n- Proven track record of achieving sales targets\n- Experience with CRM software like Salesforce\n- Ability to motivate and manage a team",
         "company": "SalesPro",
         "location": "Chicago",
+        "jobType": "part-time",
         "salaryRange": {
             "min": 80000,
             "max": 120000
@@ -137,13 +147,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "Graphic Designer",
         "description": "We are seeking a talented Graphic Designer to create visually appealing designs for our marketing materials, website, and social media. You will work closely with the marketing team to develop creative concepts that align with our brand.\n\nRequirements:\n- 3+ years of experience in graphic design\n- Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign)\n- Strong understanding of design principles and typography\n- Excellent communication and collaboration skills\n- Ability to create designs for both print and digital media",
         "company": "Creative Minds",
         "location": "Los Angeles",
+        "jobType": "part-time",
         "salaryRange": {
             "min": 60000,
             "max": 90000
@@ -151,13 +162,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Systems Administrator",
         "description": "We are looking for a Systems Administrator to maintain, upgrade, and manage our software, hardware, and networks. You will be responsible for ensuring that our IT infrastructure runs smoothly and efficiently, and you should be able to diagnose and resolve technical issues quickly.\n\nRequirements:\n- 4+ years of experience as a Systems Administrator\n- Proficiency in Windows and Linux server environments\n- Experience with network management and security\n- Strong problem-solving and troubleshooting skills\n- Excellent communication and teamwork skills",
         "company": "TechGuard",
         "location": "San Diego",
+        "jobType": "part-time",
         "salaryRange": {
             "min": 70000,
             "max": 100000
@@ -165,13 +177,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "Financial Analyst",
         "description": "We are seeking a Financial Analyst to join our finance team. You will be responsible for analyzing financial data, creating financial models, and providing insights to support business decisions. You should have strong analytical skills and be able to communicate financial information clearly.\n\nRequirements:\n- 3+ years of experience in financial analysis\n- Strong proficiency in Excel and financial modeling\n- Experience with financial reporting and budgeting\n- Excellent communication and presentation skills\n- Ability to work independently and meet deadlines",
         "company": "FinancePros",
         "location": "New York",
+        "jobType": "part-time",
         "salaryRange": {
             "min": 75000,
             "max": 110000
@@ -179,13 +192,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "Customer Support Specialist",
         "description": "We are looking for a Customer Support Specialist to provide excellent customer service and support to our clients. You will be responsible for handling customer inquiries, troubleshooting issues, and providing solutions. You should have strong communication skills and a customer-first attitude.\n\nRequirements:\n- 2+ years of experience in customer support\n- Excellent communication and problem-solving skills\n- Ability to handle multiple tasks and prioritize effectively\n- Experience with customer support software like Zendesk\n- Strong interpersonal skills and a positive attitude",
         "company": "ClientFirst",
         "location": "Remote",
+        "jobType": "full-time",
         "salaryRange": {
             "min": 45000,
             "max": 65000
@@ -193,13 +207,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     },
     {
         "title": "Operations Manager",
         "description": "We are seeking an experienced Operations Manager to oversee the day-to-day operations of our company. You will be responsible for managing resources, improving operational processes, and ensuring that our operations run smoothly and efficiently.\n\nRequirements:\n- 5+ years of experience in operations management\n- Strong understanding of operational processes and best practices\n- Excellent leadership and communication skills\n- Experience with project management tools\n- Ability to analyze data and make informed decisions",
         "company": "OperationsPro",
         "location": "Houston",
+        "jobType": "full-time",
         "salaryRange": {
             "min": 85000,
             "max": 120000
@@ -207,13 +222,14 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad90"
+        "user": "66d083fcfbed11e7c5f1ad51"
     },
     {
         "title": "IT Support Technician",
         "description": "We are looking for an IT Support Technician to provide technical assistance to our employees. You will be responsible for troubleshooting hardware and software issues, setting up new workstations, and providing training to users. You should have strong technical skills and a customer-service mindset.\n\nRequirements:\n- 2+ years of experience in IT support\n- Proficiency in Windows and Mac operating systems\n- Experience with network troubleshooting and support\n- Excellent communication and interpersonal skills\n- Ability to work independently and prioritize tasks",
         "company": "TechAssist",
         "location": "Phoenix",
+        "jobType": "full-time",
         "salaryRange": {
             "min": 50000,
             "max": 70000
@@ -221,6 +237,6 @@
         "createdAt": "2024-08-29T00:00:00Z",
         "updatedAt": "2024-08-29T00:00:00Z",
         "deletedAt": "2024-08-29T00:00:00Z",
-        "user": "66cf362ccdaacb0a0836ad94"
+        "user": "66d083fcfbed11e7c5f1ad57"
     }
 ]

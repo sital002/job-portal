@@ -5,9 +5,65 @@ import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import mongoose from "mongoose";
 
-export const browseJobs = asyncApiHandler(async (_req, res) => {
-  const jobs = await JobModel.find().populate("user");
-  res.status(200).json(new ApiResponse("Jobs retrived successfully", jobs));
+const browseJobsSchema = z
+  .object({
+    location: z.string().optional(),
+    jobType: z
+      .enum(["full-time", "part-time", "contract", "internship"], {
+        message: "Invalid job type",
+      })
+      .optional(),
+    minSalary: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "minSalary must be a number",
+        path: ["minSalary"],
+      }),
+    maxSalary: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "maxSalary must be a number",
+        path: ["maxSalary"],
+      }),
+    title: z.string().optional(),
+    datePosted: z
+      .string()
+      .optional()
+      .transform((value) => (value ? Number(value) : undefined))
+      .refine((value) => value === undefined || !isNaN(value), {
+        message: "datePosted must be a number",
+        path: ["datePosted"],
+      }),
+  })
+  .refine((data) => data.maxSalary === undefined || data.minSalary === undefined || data.maxSalary >= data.minSalary, {
+    message: "maxSalary cannot be less than minSalary",
+    path: ["maxSalary"],
+  });
+
+export const browseJobs = asyncApiHandler(async (req, res) => {
+  const result = browseJobsSchema.safeParse(req.query);
+  if (!result.success) throw new ApiError(400, result.error.errors[0].message);
+  const { location, minSalary, maxSalary, title, datePosted, jobType } = result.data;
+
+  const filter: any = {};
+
+  if (location) filter.location = { $regex: location, $options: "i" };
+
+  if (minSalary || maxSalary) {
+    filter["salaryRange.min"] = { $gte: Number(minSalary) || 0 };
+    filter["salaryRange.max"] = { $lte: Number(maxSalary) || Infinity };
+  }
+  if (jobType) filter.jobType = jobType;
+
+  if (title) filter.title = { $regex: title, $options: "i" };
+  if (datePosted) filter.createdAt = { $gte: new Date(new Date().setDate(new Date().getDate() - Number(datePosted))) };
+
+  const jobs = await JobModel.find(filter).populate("user").exec();
+  res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });
 
 const jobSchema = z.object({
@@ -17,6 +73,9 @@ const jobSchema = z.object({
     })
     .min(2, "Title must be at least 2 characters long")
     .max(64, "Title must be at most 64 characters long"),
+  jobType: z.enum(["full-time", "part-time", "contract", "internship"], {
+    message: "Invalid job type",
+  }),
   description: z
     .string({
       required_error: "Description is required",
@@ -35,12 +94,10 @@ const jobSchema = z.object({
     })
     .min(2, "Location must be at least 2 characters long")
     .max(64, "Location must be at most 64 characters long"),
-  salary: z
-    .number({
-      required_error: "Salary is required",
-    })
-    .int()
-    .positive("Salary must be a positive number"),
+  salary: z.object({
+    min: z.number().int().min(0).max(1000000),
+    max: z.number().int().min(0).max(1000000),
+  }),
 });
 export const createJob = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not loggedin to create a job");
@@ -54,7 +111,11 @@ export const createJob = asyncApiHandler(async (req, res) => {
     description: result.data.description,
     company: result.data.company,
     location: result.data.location,
-    salary: result.data.salary,
+    jobType: result.data.jobType,
+    salaryRange: {
+      min: result.data.salary.min,
+      max: result.data.salary.max,
+    },
   });
   if (!jobs) throw new ApiError(500, "Error creating job");
   res.status(201).json(new ApiResponse("Job created successfully", jobs));
@@ -64,7 +125,7 @@ export const getJobById = asyncApiHandler(async (req, res) => {
   const id = req.params.id;
   if (!id) throw new ApiError(400, "Job id is required");
   if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
-  const job = await JobModel.findById(req.params.id).populate("user");
+  const job = await JobModel.findById(req.params.id).populate("user").exec();
   if (!job) throw new ApiError(404, "Job not found");
   res.status(200).json(new ApiResponse("Job retrieved successfully", job));
 });

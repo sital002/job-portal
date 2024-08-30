@@ -35,11 +35,22 @@ const FilterSidebar: React.FC = () => {
               <input type="checkbox" className="mr-2" />
               Contract
             </label>
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Remote
+            </label>
           </div>
         </div>
         <div>
           <h3 className="font-medium mb-2">Salary Range</h3>
           <input type="range" className="w-full" min="0" max="100000" step="1000" />
+        </div>
+        <div>
+          <h3 className="font-medium mb-2">Company</h3>
+          <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+             Google
+            </label>
         </div>
       </div>
     </motion.aside>

@@ -32,7 +32,7 @@ const SingleJob: React.FC = () => {
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Job Description</h2>
 
-            <p className="text-gray-700 mb-4">{job?.description}</p>
+            <p className="text-gray-700 mb-4 text-justify">{job?.description}</p>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600">

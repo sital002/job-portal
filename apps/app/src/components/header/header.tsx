@@ -21,12 +21,7 @@ const Header: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="space-x-6"
         >
-          <NavLink
-            to={"/how"}
-            className="text-gray-600 hover:text-blue-600 transition duration-300"
-          >
-            How It Works
-          </NavLink>
+        
           <NavLink
             to={"/about"}
             className="text-gray-600 hover:text-blue-600 transition duration-300"

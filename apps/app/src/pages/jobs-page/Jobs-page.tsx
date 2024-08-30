@@ -5,6 +5,7 @@ import FilterSidebar from "../../components/filter-sidebar/filter-sidebar";
 import { motion } from "framer-motion";
 
 const JobPage: React.FC = () => {
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">
       <main className="container mx-auto px-4 py-8">

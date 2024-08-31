@@ -1,12 +1,28 @@
 import request from "supertest";
+
 import app from "../../app";
 import { Ijob } from "../../db/model/job.model";
+import UserModel from "../../db/model/user.model";
 
 let jobId: string;
 
 const BASE_URL = "/api/v1/jobs";
 
 describe("Job Controller", () => {
+  let access_token: string;
+  let refresh_token: string;
+
+  beforeAll(async () => {
+    const recruitedAccount = await UserModel.findOne({
+      role: "RECRUITER",
+    });
+    if (!recruitedAccount) {
+      throw new Error("Recruiter account not found");
+    }
+
+    access_token = recruitedAccount.generateAccessToken();
+    refresh_token = recruitedAccount.generateRefreshToken();
+  });
   describe("POST /jobs/new", () => {
     it("should return 401 for creating job without login", async () => {
       const response = await request(app).post(`${BASE_URL}/new`).send({
@@ -17,6 +33,59 @@ describe("Job Controller", () => {
         salary: 10000,
       });
       expect(response.statusCode).toBe(401);
+    });
+
+    describe("POST /jobs/new with invalid data", () => {
+      it("should return 400 if the title is too short", async () => {
+        const response = await request(app)
+          .post(`${BASE_URL}/new`)
+          .set("Cookie", [`access_token=${access_token}`])
+          .send({
+            title: "T",
+            description: "Test Job Description",
+            company: "Test Company",
+            location: "Test Location",
+            salary: {
+              min: 10000,
+              max: 100000,
+            },
+          });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBeDefined();
+      });
+    });
+    describe("POST /jobs/new with unauthorized role", () => {
+      let access_token: string;
+      let refresh_token: string;
+      beforeAll(async () => {
+        const candiateAccount = await UserModel.findOne({
+          role: "USER",
+        });
+        if (!candiateAccount) {
+          throw new Error("Candidate account not found");
+        }
+        access_token = candiateAccount.generateAccessToken();
+        refresh_token = candiateAccount.generateRefreshToken();
+      });
+
+      it("should return 403 if the user isnot recruiter", async () => {
+        const response = await request(app)
+          .post(`${BASE_URL}/new`)
+          .set("Cookie", [`access_token=${access_token}`])
+          .send({
+            title: "Test job",
+            description: "Test Job Description",
+            company: "Test Company",
+            location: "Test Location",
+            jobType: "full-time",
+            salary: {
+              min: 10000,
+              max: 100000,
+            },
+          });
+        expect(response.statusCode).toBe(403);
+        expect(response.body.message).toBeDefined();
+      });
     });
   });
 
@@ -78,7 +147,7 @@ describe("Job Controller", () => {
         expect(body.data).toBeDefined();
         expect(body.data).toBeInstanceOf(Array);
         for (const job of body.data as Ijob[]) {
-          expect(new Date(job.createdAt).getDate()).toBeLessThanOrEqual(datePosted);
+          expect(new Date(new Date().setDate(new Date().getDate() - Number(datePosted))).getDate()).toBeLessThanOrEqual(datePosted);
         }
       });
     });

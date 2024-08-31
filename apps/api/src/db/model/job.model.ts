@@ -12,6 +12,7 @@ export interface Ijob {
   };
   createdAt: Date;
   updatedAt: Date;
+  status: "OEPN" | "CLOSED" | "DELETED" | "HIRED";
   deletedAt: Date;
   user: mongoose.Types.ObjectId;
 }
@@ -30,6 +31,11 @@ const jobSchema = new Schema<Ijob>({
   salaryRange: {
     min: { type: Number, required: true },
     max: { type: Number, required: true },
+  },
+  status: {
+    type: String,
+    enum: ["OEPN", "CLOSED", "DELETED", "HIRED"],
+    default: "OEPN",
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

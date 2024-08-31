@@ -84,13 +84,13 @@ const jobSchema = z.object({
     .max(1024, "Description must be at most 1024 characters long"),
   company: z
     .string({
-      required_error: "Company is required",
+      required_error: "company is required",
     })
     .min(2, "Company must be at least 2 characters long")
     .max(64, "Company must be at most 64 characters long"),
   location: z
     .string({
-      required_error: "Location is required",
+      required_error: "location is required",
     })
     .min(2, "Location must be at least 2 characters long")
     .max(64, "Location must be at most 64 characters long"),

@@ -4,6 +4,7 @@ import { globalErrorHandler } from "./utils/globalErrorHandler";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import jobRouter from "./routes/job.route";
+import bookmarkRouter from "./routes/bookmark.route";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", jobRouter);
+app.use("/api/v1/bookmarks", bookmarkRouter);
 
 app.use(globalErrorHandler);
 

@@ -12,6 +12,7 @@ export interface IUser extends Document {
   displayName: string;
   status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
   verificationToken: string;
+  bookmarks: [mongoose.Types.ObjectId];
   comparePassword(password: string): Promise<boolean>;
   generateAccessToken(): string;
   generateRefreshToken(): string;
@@ -60,6 +61,13 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
       required: [true, "Verification token is required"],
     },
+
+    bookmarks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Bookmark",
+      },
+    ],
   },
 
   { timestamps: true },

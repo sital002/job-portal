@@ -1,8 +1,33 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useAuthLoginAndSignup from "../hooks/useAuth-login-signup";
+import { z } from "zod";
+
 
 const Login: React.FC = () => {
+  const loginSchema = z.object({
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+  });
+
+  const { loginMutation } = useAuthLoginAndSignup();
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data) => {
+    loginMutation.mutate(data);
+  };
+
   return (
     <motion.div
       className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300"
@@ -12,14 +37,15 @@ const Login: React.FC = () => {
     >
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative">
             <input
               type="email"
-              name="email"
+              id="email"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
               placeholder=" "
               required
+              {...register("email")}
             />
             <label
               htmlFor="email"
@@ -27,14 +53,16 @@ const Login: React.FC = () => {
             >
               Email Address
             </label>
+            {/* {errors.email && <p>{errors.email.message}</p>} */}
           </div>
           <div className="relative">
             <input
               type="password"
-              name="password"
+              id="password"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
               placeholder=" "
               required
+              {...register("password")}
             />
             <label
               htmlFor="password"
@@ -42,6 +70,7 @@ const Login: React.FC = () => {
             >
               Password
             </label>
+            {/* {errors.password && <p>{errors.password.message}</p>} */}
           </div>
           <motion.button
             type="submit"

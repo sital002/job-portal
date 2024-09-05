@@ -6,6 +6,8 @@ import SignUp from "./pages/signup";
 import JobPage from "./pages/jobs-page/Jobs-page";
 import Custom404 from "./pages/custom404page/404-error";
 import SingleJob from "./pages/single-job/single-job";
+import { RequiresAuth } from "./components/RequiresAuth";
+import { BookMarkPage } from "./pages/bookmark-page/bookmark-page";
 function App() {
   return (
     <>
@@ -16,6 +18,9 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
+          <Route path="jobs/bookmarks" element={<RequiresAuth />}>
+            <Route index element={<BookMarkPage />} />
+          </Route>
         </Route>
         <Route path="*" element={<Custom404 />} />
       </Routes>

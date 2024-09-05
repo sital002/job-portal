@@ -1,29 +1,56 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-
+import { useAuth } from "../../context/authContext";
 import useSingleJob from "../../hooks/useSingleJob";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient from "../../utils/apiClient";
+import { Navigate } from "react-router-dom";
+import { Job } from "../../types/jobs.types";
 
+type BookMarkType = {
+  _id?: string | undefined;
+  title?: string | undefined;
+  description?: string | undefined;
+  company?: string | undefined;
+  location?: string | undefined;
+  salaryRange?:
+    | {
+        min: number;
+        max: number;
+      }
+    | undefined;
+  type?: string | undefined;
+  createdAt?: string | undefined;
+};
 const SingleJob: React.FC = () => {
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   console.log(job);
-  const [resume, setResume] = useState<File>();
+  const queryClient = useQueryClient();
 
-  const handleApply = async () => {
-    const formData = new FormData();
-    formData.append("resume", resume as Blob);
-    formData.append("coverLetter", "I am a great fit for this job");
-    try {
-      const response = await apiClient.post(`/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+  const { isLoggedIn } = useAuth();
+
+  const addBookmarkMutation = useMutation({
+    mutationFn: (newBookmarkJob) =>
+      apiClient
+        .post("/bookmarks/new", newBookmarkJob)
+        .then((res) => res.data.data),
+    onSuccess: (savedBookmarkJob, newBookmarkJob) => {
+      queryClient.setQueryData<BookMarkType[] | undefined>(
+        ["booking"],
+        (newBookmark) => [savedBookmarkJob, ...newBookmark]
+      );
+    },
+  });
+
+  const addBookmark = (): JSX.Element | void => {
+    if (isLoggedIn) {
+      // Assuming isLoggedIn is a boolean variable
+      return <Navigate to="/login" />;
     }
+    const newBookmarkJob = { ...job };
+    addBookmarkMutation.mutate(newBookmarkJob);
+    console.log(newBookmarkJob);
   };
 
   return (
@@ -37,9 +64,12 @@ const SingleJob: React.FC = () => {
           </Link>
         </div>
         <div className="bg-white border rounded-lg shadow-sm p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {job?.title}
-          </h1>
+          <div className="flex gap-3 items-center justify-between ">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {job?.title}
+            </h1>
+            <button onClick={() => addBookmark}>book</button>
+          </div>
           <div className="text-gray-600 mb-4">
             <p>{job?.company}</p>
             <p>

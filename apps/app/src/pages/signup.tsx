@@ -1,7 +1,42 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useAuthLoginAndSignup from "../hooks/useAuth-login-signup";
 
 const SignUp: React.FC = () => {
+  const signupSchema = z
+    .object({
+      email: z
+        .string()
+        .min(1, "Email is required")
+        .email("Invalid email format"),
+      password: z
+        .string()
+        .min(6, "Password must be at least 6 characters long"),
+      confirmPassword: z
+        .string()
+        .min(6, "Confirm Password must be at least 6 characters long"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
+
+  const { signupMutation } = useAuthLoginAndSignup();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const onSubmit = (data) => {
+    signupMutation.mutate(data);
+  };
+
   return (
     <motion.div
       className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
@@ -13,29 +48,15 @@ const SignUp: React.FC = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Sign Up
         </h2>
-        <form className="mt-8 space-y-6">
-          <div className="relative">
-            <input
-              type="text"
-              name="username"
-              className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="username"
-              className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
-            >
-              Username
-            </label>
-          </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative">
             <input
               type="email"
-              name="email"
+              id="email"
               className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder=" "
               required
+              {...register("email")}
             />
             <label
               htmlFor="email"
@@ -47,16 +68,33 @@ const SignUp: React.FC = () => {
           <div className="relative">
             <input
               type="password"
-              name="password"
+              id="password"
               className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder=" "
               required
+              {...register("password")}
             />
             <label
               htmlFor="password"
               className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
             >
               Password
+            </label>
+          </div>
+          <div className="relative">
+            <input
+              type="password"
+              id="confirmPassword"
+              className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder=" "
+              required
+              {...register("confirmPassword")}
+            />
+            <label
+              htmlFor="confirmPassword"
+              className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
+            >
+              Confirm Password
             </label>
           </div>
           <motion.button

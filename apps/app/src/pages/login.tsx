@@ -4,6 +4,25 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const Login: React.FC = () => {
+  const loginSchema = z.object({
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+  });
+
+  const { loginMutation } = useAuthLoginAndSignup();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data) => {
+    loginMutation.mutate(data);
+  };
+
   const { login } = useAuth();
   const [data, setData] = useState({
     email: "",
@@ -37,10 +56,11 @@ const Login: React.FC = () => {
               value={data.email}
               onChange={handleChange}
               type="email"
-              name="email"
+              id="email"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
               placeholder=" "
               required
+              {...register("email")}
             />
             <label
               htmlFor="email"
@@ -48,16 +68,18 @@ const Login: React.FC = () => {
             >
               Email Address
             </label>
+            {/* {errors.email && <p>{errors.email.message}</p>} */}
           </div>
           <div className="relative">
             <input
               value={data.password}
               onChange={handleChange}
               type="password"
-              name="password"
+              id="password"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
               placeholder=" "
               required
+              {...register("password")}
             />
             <label
               htmlFor="password"
@@ -65,6 +87,7 @@ const Login: React.FC = () => {
             >
               Password
             </label>
+            {/* {errors.password && <p>{errors.password.message}</p>} */}
           </div>
           <motion.button
             type="submit"

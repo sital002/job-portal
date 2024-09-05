@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["src/**/*.ts", "src/__tests__/setup-testts"],
+  "include": ["src/**/*.ts", "src/__tests__/setup-test.ts"],
   "exclude": ["node_modules"]
 }

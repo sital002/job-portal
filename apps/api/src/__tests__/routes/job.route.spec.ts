@@ -1,29 +1,43 @@
 import request from "supertest";
 
 import app from "../../app";
-import { Ijob } from "../../db/model/job.model";
-import UserModel from "../../db/model/user.model";
-
-let jobId: string;
+import JobModel, { Ijob } from "../../db/model/job.model";
+import UserModel, { IUser } from "../../db/model/user.model";
 
 const BASE_URL = "/api/v1/jobs";
 
 describe("Job Controller", () => {
   let access_token: string;
-  let refresh_token: string;
+
+  let candiateAccount: IUser;
+  let recruiterAccount: IUser;
+  let job: Ijob;
 
   beforeAll(async () => {
-    const recruitedAccount = await UserModel.findOne({
+    const jobFound = await JobModel.findOne();
+    if (!jobFound) throw new Error("Job not found");
+    job = jobFound;
+    const isCandidateAccount = await UserModel.findOne({
+      role: "USER",
+    });
+    if (!isCandidateAccount) throw new Error("Candidate account not found");
+    candiateAccount = isCandidateAccount;
+
+    const IsRecruitedAccount = await UserModel.findOne({
       role: "RECRUITER",
     });
-    if (!recruitedAccount) {
+    if (!IsRecruitedAccount) {
       throw new Error("Recruiter account not found");
     }
-
-    access_token = recruitedAccount.generateAccessToken();
-    refresh_token = recruitedAccount.generateRefreshToken();
+    recruiterAccount = IsRecruitedAccount;
   });
   describe("POST /jobs/new", () => {
+    let access_token = "";
+    let refresh_token = "";
+    beforeAll(() => {
+      access_token = recruiterAccount.generateAccessToken();
+      refresh_token = recruiterAccount.generateRefreshToken();
+    });
     it("should return 401 for creating job without login", async () => {
       const response = await request(app).post(`${BASE_URL}/new`).send({
         title: "Test Job",
@@ -156,7 +170,7 @@ describe("Job Controller", () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.data).toBeInstanceOf(Array);
-      jobId = response.body.data[0]._id;
+      job._id = response.body.data[0]._id;
     });
   });
 
@@ -172,10 +186,75 @@ describe("Job Controller", () => {
       expect(response.body.message).toBeDefined();
     });
     it("should return 200 and the job given a valid id", async () => {
-      const response = await request(app).get(`${BASE_URL}/browse/${jobId}`);
+      const response = await request(app).get(`${BASE_URL}/browse/${job._id.toString()}`);
       expect(response.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
-      expect(response.body.data._id).toEqual(jobId);
+      expect(response.body.data._id.toString()).toEqual(job._id.toString());
+    });
+  });
+
+  describe("POST /jobs/apply", () => {
+    beforeAll(() => {
+      access_token = candiateAccount.generateAccessToken();
+    });
+    it("should return 401 for applying job without login", async () => {
+      const response = await request(app).post(`${BASE_URL}/apply/${job._id.toString()}`).send();
+      expect(response.statusCode).toBe(401);
+    });
+    describe("POST /jobs/apply with invalid job id", () => {
+      it("should return 400 if the job id isn't a valid mongodb id", async () => {
+        const response = await request(app)
+          .post(`${BASE_URL}/apply/invalid-mongo-db-id`)
+          .set("Cookie", [`access_token=${access_token}`])
+          .send();
+        expect(response.statusCode).toBe(400);
+      });
+    });
+    describe("POST /jobs/apply with invalid data", () => {
+      it("should return 400 if resume url isnot valid", async () => {
+        const response = await request(app)
+          .post(`${BASE_URL}/apply/${job._id.toString()}`)
+          .set("Cookie", [`access_token=${access_token}`])
+          .send({
+            resume: "invalid-url",
+          });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBeDefined();
+      });
+    });
+    it("should return 404 if the job isn't present", async () => {
+      const response = await request(app)
+        .post(`${BASE_URL}/apply/aacfddddddddddffffffffff`)
+        .set("Cookie", [`access_token=${access_token}`])
+        .send({
+          resume: "https://test.com/resume",
+          coverLetter: "Test cover letter",
+        });
+      expect(response.statusCode).toBe(404);
+    });
+  });
+  describe("POST /jobs/apply ", () => {
+    it("should return 200 if the job is applied successfully", async () => {
+      const { body, statusCode } = await request(app)
+        .post(`${BASE_URL}/apply/${job._id.toString()}`)
+        .set("Cookie", [`access_token=${access_token}`])
+        .send({
+          resume: "https://test.com/resume",
+          coverLetter: "Test cover letter",
+        });
+      expect(statusCode).toBe(201);
+      expect(body.data).toBeDefined();
+    });
+
+    it("should return 400 if the job is already applied", async () => {
+      const response = await request(app)
+        .post(`${BASE_URL}/apply/${job._id.toString()}`)
+        .set("Cookie", [`access_token=${access_token}`])
+        .send({
+          resume: "https://test.com/resume",
+          coverLetter: "Test cover letter",
+        });
+      expect(response.statusCode).toBe(400);
     });
   });
 });

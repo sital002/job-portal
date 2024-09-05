@@ -1,6 +1,6 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
-export interface IBookmark {
+export interface IBookmark extends mongoose.Document {
   user: Schema.Types.ObjectId;
   job: Schema.Types.ObjectId;
 }

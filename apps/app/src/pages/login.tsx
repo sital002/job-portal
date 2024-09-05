@@ -1,8 +1,22 @@
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    login.mutate(data);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
   return (
     <motion.div
       className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300"
@@ -12,9 +26,16 @@ const Login: React.FC = () => {
     >
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
-        <form className="mt-8 space-y-6">
+        {login.isError && (
+          <p className="text-red-600 my-2">
+            {login.error.response?.data.message}
+          </p>
+        )}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="relative">
             <input
+              value={data.email}
+              onChange={handleChange}
               type="email"
               name="email"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
@@ -30,6 +51,8 @@ const Login: React.FC = () => {
           </div>
           <div className="relative">
             <input
+              value={data.password}
+              onChange={handleChange}
               type="password"
               name="password"
               className="peer bg-gray-100 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500"

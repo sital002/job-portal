@@ -1,7 +1,8 @@
 import mongoose, { model, Schema } from "mongoose";
 
-export interface Ijob {
+export interface Ijob extends mongoose.Document {
   title: string;
+  _id: mongoose.Types.ObjectId;
   description: string;
   company: string;
   location: string;

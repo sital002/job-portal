@@ -8,9 +8,7 @@ export const asyncApiHandler = (func: FunctionType) => {
     try {
       await func(req, res, next);
     } catch (error: unknown) {
-      if (env.NODE_ENV === "development") {
-        console.error(error);
-      }
+      console.error(error);
       return next(error);
     }
   };

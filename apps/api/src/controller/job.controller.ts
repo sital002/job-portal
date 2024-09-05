@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import mongoose from "mongoose";
+import ApplicationModel from "../db/model/application.model";
 
 const browseJobsSchema = z
   .object({
@@ -128,4 +129,43 @@ export const getJobById = asyncApiHandler(async (req, res) => {
   const job = await JobModel.findById(req.params.id).populate("user").exec();
   if (!job) throw new ApiError(404, "Job not found");
   res.status(200).json(new ApiResponse("Job retrieved successfully", job));
+});
+
+const applyJobSchema = z.object({
+  resume: z
+    .string({
+      required_error: "resume field is missing",
+    })
+    .url("Invalid resume url"),
+  coverLetter: z
+    .string({
+      required_error: "coverLetter field is missing",
+    })
+    .min(2, "Cover letter must be at least 2 characters long")
+    .max(1024, "Cover letter must be at most 1024 characters long"),
+});
+export const applyJob = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobId = req.params.jobId;
+  if (!jobId) throw new ApiError(400, "jobId is required");
+  if (!mongoose.Types.ObjectId.isValid(jobId)) throw new ApiError(400, "Invalid job id");
+  const result = applyJobSchema.safeParse(req.body);
+  if (!result.success) throw new ApiError(400, result.error.errors[0].message);
+  const validJob = await JobModel.findById(jobId);
+  if (!validJob) throw new ApiError(404, "Job not found");
+  const hasAlreadyApplied = await ApplicationModel.findOne({
+    applicant: req.user._id,
+    job: jobId,
+  });
+  if (hasAlreadyApplied) throw new ApiError(400, "You have already applied for this job");
+  const application = await ApplicationModel.create({
+    applicant: req.user._id,
+    job: jobId,
+    resume: result.data.resume,
+    coverLetter: result.data.coverLetter,
+  });
+
+  if (!application) throw new ApiError(500, "Error applying for job");
+
+  res.status(201).json(new ApiResponse("Job applied successfully", application));
 });

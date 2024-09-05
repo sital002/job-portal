@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -21,11 +21,12 @@ const Login: React.FC = () => {
     },
   });
 
-  const { login } = useAuth();
+  const { login, myProfile } = useAuth();
 
   const onLogin: SubmitHandler<LoginType> = (data) => {
     login.mutate(data);
   };
+  if (myProfile) return <Navigate to="/" />;
 
   return (
     <motion.div

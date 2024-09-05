@@ -41,7 +41,7 @@ export function useAuth() {
 
   const myProfile = useQuery<ApiResponse, AxiosError<ApiError>>({
     queryKey: ["users"],
-    queryFn: () => apiClient.get("/users/me"),
+    queryFn: () => apiClient.get("/auth/me"),
   });
 
   return {

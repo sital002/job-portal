@@ -1,15 +1,14 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
   const { myProfile } = useAuth();
-  if (myProfile.isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!myProfile.isLoading && myProfile.isError) {
-    return <Navigate to={"/signin"} />;
-  }
-  return children;
+
+  return !myProfile.isLoading && myProfile.isError ? (
+    <Navigate to={"/login"} />
+  ) : (
+    <Outlet />
+  );
 };
 
 export default ProtectedRoute;

@@ -1,9 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useAuthLoginAndSignup from "../hooks/useAuth-login-signup";
 
 const SignUp: React.FC = () => {
   const signupSchema = z
@@ -23,18 +22,19 @@ const SignUp: React.FC = () => {
       message: "Passwords don't match",
       path: ["confirmPassword"],
     });
+  type SignupType = z.infer<typeof signupSchema>;
 
-  const { signupMutation } = useAuthLoginAndSignup();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
-  const onSubmit = (data) => {
-    signupMutation.mutate(data);
+  const onSubmit: SubmitHandler<SignupType> = (data) => {
+    console.log(data);
   };
 
   return (

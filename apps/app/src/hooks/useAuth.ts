@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient, { ApiError, ApiResponse } from "../utils/apiClient";
 import { AxiosError } from "axios";
 
@@ -39,6 +39,11 @@ export function useAuth() {
     },
   });
 
+  const myProfile = useQuery<ApiResponse, AxiosError<ApiError>>({
+    queryKey: ["users"],
+    queryFn: () => apiClient.get("/users/me"),
+  });
+
   return {
     login: {
       ...loginMutation,
@@ -46,5 +51,6 @@ export function useAuth() {
     signup: {
       ...signUpMutation,
     },
+    myProfile,
   };
 }

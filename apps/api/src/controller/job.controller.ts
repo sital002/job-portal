@@ -6,49 +6,41 @@ import { ApiError } from "../utils/ApiError";
 import mongoose from "mongoose";
 import ApplicationModel from "../db/model/application.model";
 
-const browseJobsSchema = z
-  .object({
-    location: z.string().optional(),
-    jobType: z
-      .enum(["full-time", "part-time", "contract", "internship"], {
-        message: "Invalid job type",
-      })
-      .optional(),
-    minSalary: z
-      .string()
-      .optional()
-      .transform((value) => (value ? Number(value) : undefined))
-      .refine((value) => value === undefined || !isNaN(value), {
-        message: "minSalary must be a number",
-        path: ["minSalary"],
-      }),
-    maxSalary: z
-      .string()
-      .optional()
-      .transform((value) => (value ? Number(value) : undefined))
-      .refine((value) => value === undefined || !isNaN(value), {
-        message: "maxSalary must be a number",
-        path: ["maxSalary"],
-      }),
-    title: z.string().optional(),
-    datePosted: z
-      .string()
-      .optional()
-      .transform((value) => (value ? Number(value) : undefined))
-      .refine((value) => value === undefined || !isNaN(value), {
-        message: "datePosted must be a number",
-        path: ["datePosted"],
-      }),
-  })
-  .refine((data) => data.maxSalary === undefined || data.minSalary === undefined || data.maxSalary >= data.minSalary, {
-    message: "maxSalary cannot be less than minSalary",
-    path: ["maxSalary"],
-  });
-
+export const browseJobsSchema = z.object({
+  location: z.string().optional(),
+  minSalary: z.number().optional(),
+  maxSalary: z.number().optional(),
+  title: z.string().optional(),
+  datePosted: z
+    .string()
+    .optional()
+    .transform((value) => (value ? Number(value) : undefined))
+    .refine((value) => value === undefined || !isNaN(value), {
+      message: "datePosted must be a number",
+      path: ["datePosted"],
+    }),
+  jobType: z.string().optional(),
+  page: z
+    .string()
+    .optional()
+    .transform((value) => (value ? Number(value) : 1))
+    .refine((value) => value > 0, {
+      message: "page must be a positive number",
+      path: ["page"],
+    }),
+  limit: z
+    .string()
+    .optional()
+    .transform((value) => (value ? Number(value) : 10))
+    .refine((value) => value > 0, {
+      message: "limit must be a positive number",
+      path: ["limit"],
+    }),
+});
 export const browseJobs = asyncApiHandler(async (req, res) => {
   const result = browseJobsSchema.safeParse(req.query);
   if (!result.success) throw new ApiError(400, result.error.errors[0].message);
-  const { location, minSalary, maxSalary, title, datePosted, jobType } = result.data;
+  const { location, minSalary, maxSalary, title, datePosted, jobType, page, limit } = result.data;
 
   const filter: any = {};
 
@@ -63,7 +55,9 @@ export const browseJobs = asyncApiHandler(async (req, res) => {
   if (title) filter.title = { $regex: title, $options: "i" };
   if (datePosted) filter.createdAt = { $gte: new Date(new Date().setDate(new Date().getDate() - Number(datePosted))) };
 
-  const jobs = await JobModel.find(filter).populate("user").exec();
+  const skip = (page - 1) * limit;
+  const jobs = await JobModel.find(filter).skip(skip).limit(limit).populate("user").exec();
+
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });
 

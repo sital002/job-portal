@@ -3,12 +3,9 @@ import { useAuth } from "../hooks/useAuth";
 
 const ProtectedRoute = () => {
   const { myProfile } = useAuth();
+  const { isLoading, isError } = myProfile;
 
-  return !myProfile.isLoading && myProfile.isError ? (
-    <Navigate to={"/login"} />
-  ) : (
-    <Outlet />
-  );
+  return !isLoading && isError ? <Navigate to={"/login"} /> : <Outlet />;
 };
 
 export default ProtectedRoute;

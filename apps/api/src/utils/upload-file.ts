@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { unlinkSync } from "fs";
+import { rmdirSync, unlinkSync } from "fs";
 
 export async function uploadFile(filePath: string, folder: string): Promise<{ error: any; result: any }> {
   try {

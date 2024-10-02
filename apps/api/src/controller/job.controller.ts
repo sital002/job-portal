@@ -5,6 +5,7 @@ import { asyncApiHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import mongoose from "mongoose";
 import ApplicationModel from "../db/model/application.model";
+import { uploadFile } from "../utils/upload-file";
 
 export const browseJobsSchema = z.object({
   location: z.string().optional(),
@@ -126,11 +127,6 @@ export const getJobById = asyncApiHandler(async (req, res) => {
 });
 
 const applyJobSchema = z.object({
-  resume: z
-    .string({
-      required_error: "resume field is missing",
-    })
-    .url("Invalid resume url"),
   coverLetter: z
     .string({
       required_error: "coverLetter field is missing",
@@ -139,12 +135,14 @@ const applyJobSchema = z.object({
     .max(1024, "Cover letter must be at most 1024 characters long"),
 });
 export const applyJob = asyncApiHandler(async (req, res) => {
+  if (!req.file) throw new ApiError(400, "No file uploaded");
+  const filePath = req.file.destination + "/" + req.file.filename;
   if (!req.user) throw new ApiError(401, "You are not logged in");
   const jobId = req.params.jobId;
   if (!jobId) throw new ApiError(400, "jobId is required");
   if (!mongoose.Types.ObjectId.isValid(jobId)) throw new ApiError(400, "Invalid job id");
-  const result = applyJobSchema.safeParse(req.body);
-  if (!result.success) throw new ApiError(400, result.error.errors[0].message);
+  const body = applyJobSchema.safeParse(req.body);
+  if (!body.success) throw new ApiError(400, body.error.errors[0].message);
   const validJob = await JobModel.findById(jobId);
   if (!validJob) throw new ApiError(404, "Job not found");
   const hasAlreadyApplied = await ApplicationModel.findOne({
@@ -152,11 +150,13 @@ export const applyJob = asyncApiHandler(async (req, res) => {
     job: jobId,
   });
   if (hasAlreadyApplied) throw new ApiError(400, "You have already applied for this job");
+  const { error, result } = await uploadFile(filePath, "resume");
+  if (error) throw new ApiError(500, "Error uploading file to cloudinary");
   const application = await ApplicationModel.create({
     applicant: req.user._id,
     job: jobId,
-    resume: result.data.resume,
-    coverLetter: result.data.coverLetter,
+    resume: result.secure_url,
+    coverLetter: body.data.coverLetter,
   });
 
   if (!application) throw new ApiError(500, "Error applying for job");

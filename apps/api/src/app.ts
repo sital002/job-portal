@@ -11,6 +11,8 @@ import { ApiError } from "./utils/ApiError";
 import { asyncApiHandler } from "./utils/AsyncHandler";
 import upload from "./utils/multer";
 import fs from "fs";
+import { uploadFile } from "./utils/upload-file";
+import { ApiResponse } from "./utils/ApiResponse";
 const app = express();
 
 app.use(
@@ -35,25 +37,9 @@ app.use(
   asyncApiHandler(async (req, res) => {
     if (!req.file) throw new ApiError(400, "No file uploaded");
     const filePath = req.file.destination + "/" + req.file.filename;
-    // return res.send("File uploaded successfully  " + req.file.originalname);
-    cloudinary.uploader.upload(
-      filePath,
-      {
-        folder: "job-portal/resume",
-      },
-      (error, result) => {
-        if (error) throw new ApiError(500, "Error uploading resume");
-        console.log(result);
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          } else {
-            console.log("File deleted successfully");
-          }
-        });
-        return res.send("File uploaded successfully");
-      },
-    );
+    const { error, result } = await uploadFile(filePath, "resume");
+    if (error) throw new ApiError(500, "Error uploading file to cloudinary");
+    return res.status(200).json(new ApiResponse("File uploaded successfully", result));
   }),
 );
 

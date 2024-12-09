@@ -1,8 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import useAuth from "../../context/useAuth";
 
 const Header: React.FC = () => {
+  const { user } = useAuth();
   return (
     <header className="container mx-auto px-4 py-6 bg-inherit">
       <nav className="flex items-center justify-between">
@@ -21,19 +23,24 @@ const Header: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="space-x-6"
         >
-        
           <NavLink
             to={"/about"}
             className="text-gray-600 hover:text-blue-600 transition duration-300"
           >
             About Us
           </NavLink>
-          <NavLink
-            to={"/login"}
-            className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300"
-          >
-            Sign In
-          </NavLink>
+          {user ? (
+            <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+              Logout
+            </button>
+          ) : (
+            <NavLink
+              to={"/login"}
+              className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300"
+            >
+              Sign In
+            </NavLink>
+          )}
         </motion.div>
       </nav>
     </header>

@@ -7,19 +7,19 @@ import JobPage from "./pages/jobs-page/Jobs-page";
 import Custom404 from "./pages/custom404page/404-error";
 import SingleJob from "./pages/single-job/single-job";
 import { BookMarkPage } from "./pages/bookmark-page/bookmark-page";
-import ProtectedRoute from "./utils/protected-route";
+import { ProtectedRoute } from "./utils/protected-route";
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<LandingPage />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="jobs" element={<JobPage />} />
-          <Route path="jobs/:jobId" element={<SingleJob />} />
-          <Route path="jobs/bookmarks" element={<ProtectedRoute />}>
-            <Route index element={<BookMarkPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route index element={<LandingPage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="jobs" element={<JobPage />} />
+            <Route path="jobs/:jobId" element={<SingleJob />} />
+            <Route path="jobs/bookmarks" element={<BookMarkPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Custom404 />} />

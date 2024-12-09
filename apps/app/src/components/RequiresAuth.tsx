@@ -1,9 +1,10 @@
 import { Navigate, Outlet, useLocation } from "react-router";
-import { useAuth } from "../context/authContext";
+import useAuth from "../context/useAuth";
+
 export function RequiresAuth() {
-  const { isLoggedIn } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
-  return isLoggedIn ? (
+  return user ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} />

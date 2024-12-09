@@ -8,4 +8,5 @@ authRouter.route("/signup").post(signUp);
 authRouter.route("/signin").post(signIn);
 authRouter.route("/verify-email").get(authenticate, verifyEmail);
 
+authRouter.route("/me").get(authenticate, (req, res) => res.json(req.user));
 export default authRouter;

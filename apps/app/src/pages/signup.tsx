@@ -3,110 +3,135 @@ import { motion } from "framer-motion";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import apiClient from "../utils/apiClient";
+import { useNavigate } from "react-router";
+
+const signupSchema = z
+  .object({
+    displayName: z
+      .string()
+      .min(2, "Display name must be at least 2 characters long"),
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm Password must be at least 6 characters long"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+type SignupType = z.infer<typeof signupSchema>;
 
 const SignUp: React.FC = () => {
-  const signupSchema = z
-    .object({
-      email: z
-        .string()
-        .min(1, "Email is required")
-        .email("Invalid email format"),
-      password: z
-        .string()
-        .min(6, "Password must be at least 6 characters long"),
-      confirmPassword: z
-        .string()
-        .min(6, "Confirm Password must be at least 6 characters long"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords don't match",
-      path: ["confirmPassword"],
-    });
-  type SignupType = z.infer<typeof signupSchema>;
-
-  const { register, handleSubmit } = useForm({
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupType>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      displayName: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit: SubmitHandler<SignupType> = (data) => {
+  const onSubmit: SubmitHandler<SignupType> = async (data) => {
     console.log(data);
+    try {
+      const response = await apiClient.post("/auth/signup", data);
+      console.log(response.data);
+      if (response.data.success) {
+        navigate("/jobs");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <motion.div
-      className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-purple-500">
+      <motion.div
+        className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Sign Up
         </h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="relative">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              id="displayName"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Display Name"
+              {...register("displayName")}
+            />
+            {errors.displayName && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.displayName.message}
+              </p>
+            )}
+          </div>
+          <div>
             <input
               type="email"
               id="email"
-              className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=" "
-              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Email Address"
               {...register("email")}
             />
-            <label
-              htmlFor="email"
-              className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
-            >
-              Email Address
-            </label>
+            {errors.email && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.email.message}
+              </p>
+            )}
           </div>
-          <div className="relative">
+          <div>
             <input
               type="password"
               id="password"
-              className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=" "
-              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Password"
               {...register("password")}
             />
-            <label
-              htmlFor="password"
-              className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
-            >
-              Password
-            </label>
+            {errors.password && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          <div className="relative">
+          <div>
             <input
               type="password"
               id="confirmPassword"
-              className="peer bg-gray-200 rounded-full w-full px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=" "
-              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Confirm Password"
               {...register("confirmPassword")}
             />
-            <label
-              htmlFor="confirmPassword"
-              className="absolute left-4 top-2 text-gray-400 peer-focus:-top-6 peer-focus:text-blue-500 peer-focus:text-sm transition-all"
-            >
-              Confirm Password
-            </label>
+            {errors.confirmPassword && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.1 }}
-            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 rounded-full focus:outline-none shadow-lg hover:shadow-blue-500/50 transition-shadow duration-300"
+            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Sign Up
           </motion.button>
         </form>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 

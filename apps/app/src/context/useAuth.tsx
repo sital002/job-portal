@@ -49,6 +49,7 @@ export function AuthContextProvider({
   }
   useEffect(() => {
     getUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 //   async function logout() {
@@ -69,6 +70,7 @@ export function AuthContextProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

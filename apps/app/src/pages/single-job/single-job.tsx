@@ -1,11 +1,28 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import useSingleJob from "../../hooks/useSingleJob";
+import apiClient from "../../utils/apiClient";
+import useBooking from "../../hooks/useBooking";
 
 const SingleJob: React.FC = () => {
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
+  const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
+  console.log("Bookmarks", bookmarks);
+  const isBookMarked = bookmarks?.some((el: any) => el.job._id === jobId);
   console.log(job);
+
+  async function addToBookMark(jobId: string) {
+    console.log(jobId);
+    try {
+      const response = await apiClient.post("/bookmarks/new", { jobId });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (isLoading || isBookmarksLoading) return <p>Loading...</p>;
 
   return (
     <div className="bg-white">
@@ -22,7 +39,13 @@ const SingleJob: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {job?.title}
             </h1>
-            <button>book</button>
+            <button
+              disabled={isBookMarked}
+              onClick={() => addToBookMark(job?._id as string)}
+              className={`${isBookMarked ? "bg-blue-400" : "bg-green-400"} text-white px-6 py-2 rounded-md `}
+            >
+              {isBookMarked ? "Booked" : "Book"}
+            </button>
           </div>
           <div className="text-gray-600 mb-4">
             <p>{job?.company}</p>

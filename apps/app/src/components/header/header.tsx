@@ -5,6 +5,7 @@ import useAuth from "../../context/useAuth";
 
 const Header: React.FC = () => {
   const { user } = useAuth();
+  console.log(user);
   return (
     <header className="container mx-auto px-4 py-6 bg-inherit">
       <nav className="flex items-center justify-between">

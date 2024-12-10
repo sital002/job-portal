@@ -11,7 +11,7 @@ export const BookMarkPage = () => {
 
       {bookmarks &&
         bookmarks.length > 0 &&
-        bookmarks?.map((job, index: number) => (
+        bookmarks?.map((job:any, index: number) => (
           <motion.div
             key={job._id.toString()}
             initial={{ opacity: 0, y: 50 }}
@@ -19,7 +19,7 @@ export const BookMarkPage = () => {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="bg-white rounded-lg shadow-md p-4"
           >
-            <h3 className="text-lg font-semibold">{job.title}</h3>
+            <h3 className="text-lg font-semibold">{job.job.title}</h3>
             <p className="text-gray-600">{job.company}</p>
             <div className="flex justify-between mt-2">
               <span className="text-sm text-gray-500">{job.location}</span>

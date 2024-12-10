@@ -13,12 +13,20 @@ const SingleJob: React.FC = () => {
   console.log(job);
 
   async function addToBookMark(jobId: string) {
-    console.log(jobId);
     try {
       const response = await apiClient.post("/bookmarks/new", { jobId });
       console.log(response.data);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async function deleteBookMark(bookmarkId: string) {
+    try {
+      const response = await apiClient.delete(`/bookmarks/${bookmarkId}`);
+      console.log(response);
+    } catch (error) {
+      console.log("failed to delete", error);
     }
   }
 
@@ -39,13 +47,22 @@ const SingleJob: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {job?.title}
             </h1>
-            <button
-              disabled={isBookMarked}
-              onClick={() => addToBookMark(job?._id as string)}
-              className={`${isBookMarked ? "bg-blue-400" : "bg-green-400"} text-white px-6 py-2 rounded-md `}
-            >
-              {isBookMarked ? "Booked" : "Book"}
-            </button>
+            {isBookMarked ? (
+              <button
+                className="text-white px-6 py-2 rounded-md bg-red-500"
+                onClick={() => deleteBookMark(jobId as string)}
+              >
+                Delete
+              </button>
+            ) : (
+              <button
+                disabled={isBookMarked}
+                onClick={() => addToBookMark(job?._id as string)}
+                className={`${isBookMarked ? "bg-blue-400" : "bg-green-400"} text-white px-6 py-2 rounded-md `}
+              >
+                {isBookMarked ? "Booked" : "Book"}
+              </button>
+            )}
           </div>
           <div className="text-gray-600 mb-4">
             <p>{job?.company}</p>

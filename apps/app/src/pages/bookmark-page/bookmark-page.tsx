@@ -11,7 +11,7 @@ export const BookMarkPage = () => {
 
       {bookmarks &&
         bookmarks.length > 0 &&
-        bookmarks?.map((job:any, index: number) => (
+        bookmarks?.map((job: any, index: number) => (
           <motion.div
             key={job._id.toString()}
             initial={{ opacity: 0, y: 50 }}
@@ -20,16 +20,16 @@ export const BookMarkPage = () => {
             className="bg-white rounded-lg shadow-md p-4"
           >
             <h3 className="text-lg font-semibold">{job.job.title}</h3>
-            <p className="text-gray-600">{job.company}</p>
+            <p className="text-gray-600">{job.job.company}</p>
             <div className="flex justify-between mt-2">
-              <span className="text-sm text-gray-500">{job.location}</span>
-              <span className="text-sm text-gray-500">{job.type}</span>
+              <span className="text-sm text-gray-500">{job.job.location}</span>
+              <span className="text-sm text-gray-500">{job.job.type}</span>
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              Posted {job.createdAt.slice(0, 10)}
+              Posted {job.job.createdAt.slice(0, 10)}
             </p>
             <Link
-              to={`/jobs/${job._id}`}
+              to={`/jobs/${job.job._id}`}
               className="text-blue-600 hover:underline"
             >
               View

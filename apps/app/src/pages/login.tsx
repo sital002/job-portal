@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import apiClient from "../utils/apiClient";
+import { useAuth } from "../context/useAuth";
+
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -14,7 +15,16 @@ const loginSchema = z.object({
 type LoginType = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/jobs');
+    }
+  }, [user, navigate]);
+
   const {
     register,
     handleSubmit,
@@ -29,12 +39,11 @@ const Login: React.FC = () => {
 
   const onLogin: SubmitHandler<LoginType> = async (data) => {
     try {
-      const response = await apiClient.post("/auth/signin", data);
-      if (response.status === 200) {
-        navigate("/jobs");
-      }
+      await login(data.email, data.password);
+      navigate('/jobs');
     } catch (error) {
       console.error(error);
+      setLoginError("Login failed. Please check your credentials and try again.");
     }
   };
 
@@ -49,6 +58,11 @@ const Login: React.FC = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Login
         </h2>
+        {loginError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{loginError}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit(onLogin)} className="space-y-4">
           <div>
             <input
@@ -104,3 +118,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+

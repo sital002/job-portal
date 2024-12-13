@@ -1,11 +1,22 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import useAuth from "../../context/useAuth";
+import { useAuth } from "../../context/useAuth";
 
 const Header: React.FC = () => {
-  const { user } = useAuth();
-  console.log(user);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Handle logout error (e.g., show error message to user)
+    }
+  };
+
   return (
     <header className="container mx-auto px-4 py-6 bg-inherit">
       <nav className="flex items-center justify-between">
@@ -31,7 +42,10 @@ const Header: React.FC = () => {
             About Us
           </NavLink>
           {user ? (
-            <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out"
+            >
               Logout
             </button>
           ) : (

@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import useSingleJob from "../../hooks/useSingleJob";
 import apiClient from "../../utils/apiClient";
 import useBooking from "../../hooks/useBooking";
+import { Data } from "../bookmark-page/bookmark-page";
 
 const SingleJob: React.FC = () => {
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
-  console.log("Bookmarks", bookmarks);
-  const isBookMarked = bookmarks?.some((el: any) => el.job._id === jobId);
-  console.log(job);
+  const [isBookMarked, setIsBookMarked] = useState(false);
+
+  useEffect(() => {
+    if (bookmarks) {
+      setIsBookMarked(bookmarks.some((el: Data) => el.job._id === jobId));
+    }
+  }, [bookmarks, jobId]);
 
   async function addToBookMark(jobId: string) {
     try {
       const response = await apiClient.post("/bookmarks/new", { jobId });
       console.log(response.data);
+      setIsBookMarked(true);
     } catch (error) {
       console.log(error);
     }
@@ -25,6 +31,7 @@ const SingleJob: React.FC = () => {
     try {
       const response = await apiClient.delete(`/bookmarks/${bookmarkId}`);
       console.log(response);
+      setIsBookMarked(false);
     } catch (error) {
       console.log("failed to delete", error);
     }
@@ -56,11 +63,10 @@ const SingleJob: React.FC = () => {
               </button>
             ) : (
               <button
-                disabled={isBookMarked}
                 onClick={() => addToBookMark(job?._id as string)}
-                className={`${isBookMarked ? "bg-blue-400" : "bg-green-400"} text-white px-6 py-2 rounded-md `}
+                className="bg-green-400 text-white px-6 py-2 rounded-md"
               >
-                {isBookMarked ? "Booked" : "Book"}
+                Book
               </button>
             )}
           </div>
@@ -73,7 +79,6 @@ const SingleJob: React.FC = () => {
           </div>
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Job Description</h2>
-
             <p className="text-gray-700 mb-4 text-justify">
               {job?.description}
             </p>

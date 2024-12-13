@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import apiClient from "../utils/apiClient";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const signupSchema = z
   .object({
@@ -25,7 +25,10 @@ const signupSchema = z
 type SignupType = z.infer<typeof signupSchema>;
 
 const SignUp: React.FC = () => {
+  const { user, signup } = useAuth();
   const navigate = useNavigate();
+  const [signupError, setSignupError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -40,16 +43,24 @@ const SignUp: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate("/jobs");
+    }
+  }, [user, navigate]);
+
   const onSubmit: SubmitHandler<SignupType> = async (data) => {
-    console.log(data);
     try {
-      const response = await apiClient.post("/auth/signup", data);
-      console.log(response.data);
-      if (response.data.success) {
-        navigate("/jobs");
-      }
+      await signup({
+        displayName: data.displayName,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      });
+      navigate("/jobs");
     } catch (error) {
       console.error(error);
+      setSignupError("An error occurred during signup. Please try again.");
     }
   };
 
@@ -64,6 +75,11 @@ const SignUp: React.FC = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Sign Up
         </h2>
+        {signupError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{signupError}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <input
@@ -136,3 +152,4 @@ const SignUp: React.FC = () => {
 };
 
 export default SignUp;
+

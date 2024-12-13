@@ -1,11 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import apiClient from "../utils/apiClient";
 
-
 type AuthContextType = {
   user: User | null;
-  loading: boolean;
-//   logout: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (userData: SignupData) => Promise<void>;
+  logout: () => Promise<void>;
+};
+
+type SignupData = {
+  displayName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 };
 
 type User = {
@@ -24,57 +31,72 @@ type User = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthContextProvider({
+export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  async function getUser() {
+  const login = async (email: string, password: string) => {
     try {
-      setLoading(true);
-      const response = await apiClient.get<User>("/auth/me");
-      console.log(response.data);
-      setUser(response?.data || null);
-      console.log(user);
+      await apiClient.post("/auth/signin", { email, password });
 
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
+      const userResponse = await apiClient.get("/auth/me");
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
     }
-  }
+  };
+
+  const signup = async (userData: SignupData) => {
+    try {
+      const response = await apiClient.post('/auth/signup', userData);
+      if (response.data.success) {
+        await login(userData.email, userData.password);
+      } else {
+        throw new Error('Signup failed');
+      }
+    } catch (error) {
+      console.error('Signup failed:', error);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await apiClient.post("/auth/signout");
+      setUser(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
-    getUser();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchUser = async () => {
+      try {
+        const response = await apiClient.get("/auth/me");
+        setUser(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        // If there's an error, assume the user is not authenticated
+        setUser(null);
+      }
+    };
+    fetchUser();
   }, []);
 
-//   async function logout() {
-//     try {
-//       setLoading(true);
-//       await apiClient.post("/auth/logout");
-//       setUser(null);
-//     } catch (e) {
-//       console.error(e);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, login, logout,signup }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-// eslint-disable-next-line react-refresh/only-export-components
-export default function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthContextProvider");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-}
+};

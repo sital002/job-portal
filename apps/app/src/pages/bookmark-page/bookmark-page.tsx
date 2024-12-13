@@ -1,17 +1,28 @@
 import { Link } from "react-router-dom";
 import useBooking from "../../hooks/useBooking";
 import { motion } from "framer-motion";
+import { Job } from "../../types/jobs.types";
+
+export type Data = {
+  createdAt: string; // ISO Date string
+  updatedAt: string; // ISO Date string
+  user: string; // User ID
+  __v: number;
+  _id: string; // Data ID
+  job: Job;
+};
 export const BookMarkPage = () => {
   const { data: bookmarks, isLoading, error } = useBooking();
+
   console.log(bookmarks);
   return (
     <div>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error.message}</p>}
 
-      {bookmarks &&
+      {bookmarks ? (
         bookmarks.length > 0 &&
-        bookmarks?.map((job: any, index: number) => (
+        bookmarks?.map((job: Data, index: number) => (
           <motion.div
             key={job._id.toString()}
             initial={{ opacity: 0, y: 50 }}
@@ -35,7 +46,12 @@ export const BookMarkPage = () => {
               View
             </Link>
           </motion.div>
-        ))}
+        ))
+      ) : (
+        <div>
+          <h1>No data found</h1>
+        </div>
+      )}
     </div>
   );
 };

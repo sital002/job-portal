@@ -8,21 +8,21 @@ import useJobs from "../../hooks/useJobs";
 export type Filter = {
   title: string;
   location: string;
-  type: string;
+  type: string[];
   minSalary: number;
   maxSalary: number;
   datePosted: string;
 };
 const JobPage: React.FC = () => {
-  const { data: jobs, error, isLoading } = useJobs();
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<Filter>({
     title: "",
     location: "",
-    type: "",
+    type: [],
     minSalary: 0,
     maxSalary: 100000,
     datePosted: "Anytime",
   });
+  const { data: jobs, error, isLoading } = useJobs(filter);
 
   const length = jobs?.length;
   console.log(length);

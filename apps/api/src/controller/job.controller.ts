@@ -126,6 +126,44 @@ export const getJobById = asyncApiHandler(async (req, res) => {
   res.status(200).json(new ApiResponse("Job retrieved successfully", job));
 });
 
+export const deleteJob = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to delete this job");
+  const id = req.params.id;
+  if (!id) throw new ApiError(400, "Job id is required");
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
+  const job = await JobModel.findByIdAndDelete(id);
+  if (!job) throw new ApiError(404, "Job not found");
+  if (job.user !== req.user._id) throw new ApiError(403, "You are not authorized to delete this job");
+  return res.status(200).json(new ApiResponse("Job deleted successfully", job));
+});
+
+export const updateJob = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to update this job");
+  const id = req.params.id;
+  if (!id) throw new ApiError(400, "Job id is required");
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
+  const result = jobSchema.safeParse(req.body);
+  if (!result.success) throw new ApiError(400, result.error.errors[0].message);
+
+  const job = await JobModel.findById(id);
+  if (!job) throw new ApiError(404, "Job not found");
+  if (job.user !== req.user._id) throw new ApiError(403, "You are not authorized to update this job");
+  job.title = result.data.title;
+  job.description = result.data.description;
+  job.company = result.data.company;
+  job.location = result.data.location;
+  job.jobType = result.data.jobType;
+  job.salaryRange = {
+    min: result.data.salary.min,
+    max: result.data.salary.max,
+  };
+  const updatedJob = await job.save();
+  if (!updatedJob) throw new ApiError(500, "Error updating job");
+  return res.status(200).json(new ApiResponse("Job updated successfully", updatedJob));
+});
+
 const applyJobSchema = z.object({
   coverLetter: z
     .string({
@@ -134,6 +172,7 @@ const applyJobSchema = z.object({
     .min(2, "Cover letter must be at least 2 characters long")
     .max(1024, "Cover letter must be at most 1024 characters long"),
 });
+
 export const applyJob = asyncApiHandler(async (req, res) => {
   if (!req.file) throw new ApiError(400, "No file uploaded");
   const filePath = req.file.destination + "/" + req.file.filename;

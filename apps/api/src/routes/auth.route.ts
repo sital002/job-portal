@@ -9,4 +9,9 @@ authRouter.route("/signin").post(signIn);
 authRouter.route("/verify-email").get(authenticate, verifyEmail);
 
 authRouter.route("/me").get(authenticate, (req, res) => res.json(req.user));
+authRouter.route("/logout").get(authenticate, (req, res) => {
+  res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
+  return res.json({ message: "Logged out" });
+});
 export default authRouter;

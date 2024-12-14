@@ -1,7 +1,15 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Filter } from "../../pages/jobs-page/Jobs-page";
 
-const FilterSidebar: React.FC = () => {
+type FilterSidebarProps = {
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
+};
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter }) => {
+
+  const [datePosted, setDatePosted] = useState<number>(0);
+  
   return (
     <motion.aside
       initial={{ opacity: 0, x: -50 }}
@@ -13,7 +21,7 @@ const FilterSidebar: React.FC = () => {
       <div className="space-y-4">
         <div>
           <h3 className="font-medium mb-2">Date Posted</h3>
-          <select className="w-full px-2 py-1 border rounded-md">
+          <select className="w-full px-2 py-1 border rounded-md" value={datePosted} >
             <option>Anytime</option>
             <option>Past 24 hours</option>
             <option>Past week</option>
@@ -33,7 +41,7 @@ const FilterSidebar: React.FC = () => {
             </label>
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
-              Contract
+              Intern
             </label>
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" />
@@ -43,14 +51,20 @@ const FilterSidebar: React.FC = () => {
         </div>
         <div>
           <h3 className="font-medium mb-2">Salary Range</h3>
-          <input type="range" className="w-full" min="0" max="100000" step="1000" />
+          <input
+            type="range"
+            className="w-full"
+            min="0"
+            max="50000"
+            step="1000"
+          />
         </div>
         <div>
           <h3 className="font-medium mb-2">Company</h3>
           <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-             Google
-            </label>
+            <input type="checkbox" className="mr-2" />
+            Google
+          </label>
         </div>
       </div>
     </motion.aside>

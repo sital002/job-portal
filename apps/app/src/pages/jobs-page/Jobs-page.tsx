@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import SearchBar from "../../components/search-bar/search-bar";
 import JobList from "../../components/job-list/job-list";
 import FilterSidebar from "../../components/filter-sidebar/filter-sidebar";
 import { motion } from "framer-motion";
-
+export type Filter={
+  title:string,
+  location:string,
+  type:string,
+  minSalary:number,
+  maxSalary:number,
+  datePosted:string
+}
 const JobPage: React.FC = () => {
+  const [filter,setFilter]=useState({
+    title:"",
+    location:"",
+    type:"",
+    minSalary:0,
+    maxSalary:100000,
+    datePosted:"Anytime"
+
+  })
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">
@@ -17,9 +33,9 @@ const JobPage: React.FC = () => {
         >
           Find your dream job
         </motion.h1>
-        <SearchBar />
+        <SearchBar setFilter={setFilter} filter={filter} />
         <div className="flex flex-col md:flex-row gap-8 mt-8">
-          <FilterSidebar />
+          <FilterSidebar setFilter={setFilter} filter={filter} />
           <JobList />
         </div>
       </main>

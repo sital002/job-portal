@@ -4,7 +4,7 @@ import { Job } from "../types/jobs.types";
 import { Filter } from "../pages/jobs-page/Jobs-page";
 
 export default function useJobs(filter: Filter) {
-  const { title, location, datePosted, minSalary, maxSalary, type } = filter;
+  const { title, location } = filter;
   const fetchJobs = () =>
     apiClient
       .get(`/jobs/browse`, {

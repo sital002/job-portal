@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router";
+import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/landing-page";
 import Layout from "./components/Layout";
 import Login from "./pages/login";
@@ -9,34 +9,33 @@ import SingleJob from "./pages/single-job/single-job";
 import { BookMarkPage } from "./pages/bookmark-page/bookmark-page";
 
 import JobForm from "./components/job-form/job-form";
-import JobSeekerRoute from "./routes/job-seeker-route";
-import RecruiterRoute from "./components/admin-route";
-import AdminRoute from "./routes/admin-route";
-import Unauthorized from "./pages/unauthorized";
-// import RecruiterDashboard from "./pages/recruiter-dashboard/recruiter-dashboard";
-// import AdminDashboard from "./pages/admin-dashboard/admin-dashboard";
 
+import Unauthorized from "./pages/unauthorized";
+import { ProtectedRoute } from "./routes/job-seeker-route";
+import RecruiterRoute from "./routes/recruiter-route";
+import AdminRoute from "./routes/admin-route";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<LandingPage />} />
+        {/* Public Routes */}
+          <Route index element={<LandingPage />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
-        {/* Job Seeker Routes */}
-        <Route element={<JobSeekerRoute />}>
+        {/* Protected User Routes */}
+        <Route element={<ProtectedRoute />}>
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
           <Route path="jobs/bookmarks" element={<BookMarkPage />} />
         </Route>
 
         {/* Recruiter Routes */}
-        <Route element={<RecruiterRoute />}>
+        <Route element={<RecruiterRoute  />}>
+          <Route path="recruiter/jobs/new" element={<JobForm />} />
           {/* <Route path="recruiter/dashboard" element={<RecruiterDashboard />} /> */}
-          <Route path="recruiter/create-job" element={<JobForm />} />
         </Route>
 
         {/* Admin Routes */}
@@ -45,7 +44,7 @@ function App() {
         </Route>
       </Route>
 
-      {/* Fallback Route */}
+      {/* 404 Route */}
       <Route path="*" element={<Custom404 />} />
     </Routes>
   );

@@ -45,7 +45,7 @@ const SignUp: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/jobs");
+      navigate("/");
     }
   }, [user, navigate]);
 

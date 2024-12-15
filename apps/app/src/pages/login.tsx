@@ -40,7 +40,7 @@ const Login: React.FC = () => {
   const onLogin: SubmitHandler<LoginType> = async (data) => {
     try {
       await login(data.email, data.password);
-      navigate('/jobs');
+      navigate('/');
     } catch (error) {
       console.error(error);
       setLoginError("Login failed. Please check your credentials and try again.");

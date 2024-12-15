@@ -2,17 +2,21 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const RecruiterRoute = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  console.log("user", user);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  if (user?.role !== "RECRUITER") {
-    return <Navigate to="/unauthorized" />;
-  }
-
-  return <Outlet />;
+  return user?.role !== "RECRUITER" ? (
+    <Navigate to="/unauthorized" />
+  ) : (
+    <Outlet />
+  );
 };
 
 export default RecruiterRoute;

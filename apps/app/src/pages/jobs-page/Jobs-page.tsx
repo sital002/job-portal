@@ -22,13 +22,13 @@ const JobPage: React.FC = () => {
     maxSalary: 100000,
     datePosted: "Anytime",
   });
-  const { data: jobs, error, isLoading } = useJobs(filter);
-
-  const length = jobs?.length;
-  console.log(length);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = length; // This could be dynamically set based on your data
+  const totalPages = 3; // This could be dynamically set based on your data
+  const limit = 5;
+  const { data: jobs, error, isLoading } = useJobs(filter,{totalPages,limit});
+
+
+
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

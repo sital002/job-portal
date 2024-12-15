@@ -6,6 +6,8 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (userData: SignupData) => Promise<void>;
   logout: () => Promise<void>;
+  loading: boolean
+  setLoading:React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type SignupData = {
@@ -35,6 +37,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
+  const[loading,setLoading]=useState(true)
 
   const login = async (email: string, password: string) => {
     try {
@@ -75,19 +78,22 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        setLoading(true)
         const response = await apiClient.get("/auth/me");
         setUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         // If there's an error, assume the user is not authenticated
         setUser(null);
+      } finally {
+        setLoading(false)
       }
     };
     fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, signup }}>
+    <AuthContext.Provider value={{ user, login, logout, signup,loading,setLoading }}>
       {children}
     </AuthContext.Provider>
   );

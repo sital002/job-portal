@@ -5,6 +5,7 @@ import { useAuth } from "../../context/useAuth";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
+  console.log(user);
   const navigate = useNavigate();
 
   const handleLogout = async () => {

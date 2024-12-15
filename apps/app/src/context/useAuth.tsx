@@ -20,7 +20,7 @@ type User = {
   displayName: string;
   email: string;
   emailVerified: boolean;
-  role: "USER" | "ADMIN" | "MODERATOR"; // Extend roles as needed
+  role: "USER" | "ADMIN" | "RECRUITER"; // Extend roles as needed
   status: "ACTIVE" | "INACTIVE" | "SUSPENDED"; // Possible account statuses
   bookmarks: []; // Define the type of bookmarks if known
   createdAt: string; // ISO date string
@@ -50,21 +50,21 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const signup = async (userData: SignupData) => {
     try {
-      const response = await apiClient.post('/auth/signup', userData);
+      const response = await apiClient.post("/auth/signup", userData);
       if (response.data.success) {
         await login(userData.email, userData.password);
       } else {
-        throw new Error('Signup failed');
+        throw new Error("Signup failed");
       }
     } catch (error) {
-      console.error('Signup failed:', error);
+      console.error("Signup failed:", error);
       throw error;
     }
   };
 
   const logout = async () => {
     try {
-      await apiClient.post("/auth/signout");
+      await apiClient.get("/auth/logout");
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
@@ -87,7 +87,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout,signup }}>
+    <AuthContext.Provider value={{ user, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

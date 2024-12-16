@@ -164,6 +164,12 @@ export const updateJob = asyncApiHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse("Job updated successfully", updatedJob));
 });
 
+export const getJob = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await JobModel.find({ user: req.user._id }).populate("user").exec();
+  res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
+});
+
 const applyJobSchema = z.object({
   coverLetter: z
     .string({

@@ -1,11 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
-import useJobs from "../../hooks/useJobs";
+
 import { Link } from "react-router-dom";
+import { Job } from "../../types/jobs.types";
+type JobListProps = {
+  jobs: Job[] | undefined;
+  error: { message: string } | null;
+  isLoading: boolean;
+};
 
-const JobList: React.FC = () => {
-  const { data: jobs, error, isLoading } = useJobs();
-
+const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
   return (
     <div className="flex-grow">
       <h2 className="text-xl font-semibold mb-4">

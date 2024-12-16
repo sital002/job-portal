@@ -58,7 +58,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
               </p>
               <div className="flex gap-3">
                 <Link
-                  to={`${loading && user?.role === "USER" ? "/jobs" : "/recruiter/jobs"}/${job._id}`}
+                  to={user?.role === "RECRUITER" ? `/recruiter/jobs/${job._id}` : `/jobs/${job._id}`}
                   className="text-blue-600 hover:underline"
                 >
                   View

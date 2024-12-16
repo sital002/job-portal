@@ -16,6 +16,7 @@ import RecruiterRoute from "./routes/recruiter-route";
 import AdminRoute from "./routes/admin-route";
 import RecruiterLayout from "./components/recruiter-layout";
 import RecruitersJob from "./pages/recruiters-job/recruiters-job";
+import EditJobForm from "./components/job-form/edit-job-form";
 
 function App() {
   return (
@@ -40,7 +41,10 @@ function App() {
           <Route element={<RecruiterLayout />}>
             <Route path="recruiter/jobs/new" element={<JobForm />} />
             <Route path="recruiter/jobs/:jobId" element={<SingleJob />} />
-            <Route path="recruiter/jobs/edit/:jobId" element={<JobForm />} />
+            <Route
+              path="recruiter/jobs/edit/:jobId"
+              element={<EditJobForm />}
+            />
 
             <Route path="recruiter/jobs" element={<RecruitersJob />} />
           </Route>

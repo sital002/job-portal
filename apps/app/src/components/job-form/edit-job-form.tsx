@@ -1,49 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import useCreateJobMutation from "../../hooks/useCreateJob";
 import { useParams } from "react-router";
+import useSingleJob from "../../hooks/useSingleJob";
+import useEditJobMutation from "../../hooks/useUpdateJobs";
+import { JobFormValues, jobSchema } from "./job-form";
 
-export const jobSchema = z.object({
-  title: z
-    .string({
-      required_error: "Title is required",
-    })
-    .min(2, "Title must be at least 2 characters long")
-    .max(64, "Title must be at most 64 characters long"),
-  jobType: z.enum(["full-time", "part-time", "contract", "internship"], {
-    required_error: "Job type is required",
-  }),
-  description: z
-    .string({
-      required_error: "Description is required",
-    })
-    .min(2, "Description must be at least 2 characters long")
-    .max(1024, "Description must be at most 1024 characters long"),
-  company: z
-    .string({
-      required_error: "Company is required",
-    })
-    .min(2, "Company must be at least 2 characters long")
-    .max(64, "Company must be at most 64 characters long"),
-  location: z
-    .string({
-      required_error: "Location is required",
-    })
-    .min(2, "Location must be at least 2 characters long")
-    .max(64, "Location must be at most 64 characters long"),
-  salary: z.object({
-    min: z.number().int().min(0).max(1000000),
-    max: z.number().int().min(0).max(1000000),
-  }),
-});
-
-export type JobFormValues = z.infer<typeof jobSchema>;
-
-export default function JobForm() {
+export default function EditJobForm() {
   const { jobId } = useParams();
+  const {
+    data: job,
+    isLoading,
+    error,
+  } = useSingleJob(jobId as string, "RECRUITER");
+  console.log(job);
 
-  const { mutate, isPending } = useCreateJobMutation();
+  const { mutate: updateJob, isPending: isUpdatePending } = useEditJobMutation(
+    jobId as string
+  );
 
   const {
     register,
@@ -51,26 +24,31 @@ export default function JobForm() {
     formState: { errors },
   } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
-    defaultValues: jobId
-      ? {
-          title: "",
-          jobType: "full-time",
-          description: "",
-          company: "",
-          location: "",
-          salary: {
-            min: 0,
-            max: 0,
-          },
-        }
-      : undefined,
+    defaultValues: {
+      title: job?.title as string,
+      jobType: job?.type as
+        | "full-time"
+        | "part-time"
+        | "contract"
+        | "internship",
+      description: job?.description as string,
+      company: job?.company as string,
+      location: job?.location as string,
+      salary: {
+        min: job?.salaryRange.min as number,
+        max: job?.salaryRange.max as number,
+      },
+    },
+    values: job as unknown as JobFormValues,
   });
 
   async function onSubmit(data: JobFormValues) {
-    console.log(data);
-    mutate(data);
+    console.log("job id is balalaa fro  recruiter", data);
+    updateJob(data);
   }
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -213,11 +191,11 @@ export default function JobForm() {
       </div>
 
       <button
-        disabled={isPending}
+        disabled={isUpdatePending}
         type="submit"
         className="w-full py-2 px-4 border-2 border-blue-500 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        {isPending ? "Submitting..." : "Submit"}
+        {isUpdatePending ? "Editing..." : "Edit"}
       </button>
     </form>
   );

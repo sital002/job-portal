@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useCreateJobMutation from "../../hooks/useCreateJob";
-import { useParams } from "react-router";
 
 export const jobSchema = z.object({
   title: z
@@ -41,8 +40,6 @@ export const jobSchema = z.object({
 export type JobFormValues = z.infer<typeof jobSchema>;
 
 export default function JobForm() {
-  const { jobId } = useParams();
-
   const { mutate, isPending } = useCreateJobMutation();
 
   const {
@@ -51,19 +48,17 @@ export default function JobForm() {
     formState: { errors },
   } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
-    defaultValues: jobId
-      ? {
-          title: "",
-          jobType: "full-time",
-          description: "",
-          company: "",
-          location: "",
-          salary: {
-            min: 0,
-            max: 0,
-          },
-        }
-      : undefined,
+    defaultValues: {
+      title: "",
+      jobType: "full-time",
+      description: "",
+      company: "",
+      location: "",
+      salary: {
+        min: 0,
+        max: 0,
+      },
+    },
   });
 
   async function onSubmit(data: JobFormValues) {

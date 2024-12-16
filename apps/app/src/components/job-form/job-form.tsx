@@ -1,7 +1,7 @@
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import useCreateJobMutation from "../../hooks/useCreateJob";
 
 const jobSchema = z.object({
   title: z
@@ -35,11 +35,12 @@ const jobSchema = z.object({
     min: z.number().int().min(0).max(1000000),
     max: z.number().int().min(0).max(1000000),
   }),
-})
+});
 
-type JobFormValues = z.infer<typeof jobSchema>
+export type JobFormValues = z.infer<typeof jobSchema>;
 
 export default function JobForm() {
+  const { mutate, isPending } = useCreateJobMutation();
   const {
     register,
     handleSubmit,
@@ -57,16 +58,23 @@ export default function JobForm() {
         max: 0,
       },
     },
-  })
+  });
 
-  function onSubmit(data: JobFormValues) {
-    console.log(data)
+  async function onSubmit(data: JobFormValues) {
+    console.log(data);
+    mutate(data);
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md mx-auto">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 max-w-md mx-auto"
+    >
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700"
+        >
           Job Title
         </label>
         <input
@@ -81,7 +89,10 @@ export default function JobForm() {
       </div>
 
       <div>
-        <label htmlFor="jobType" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="jobType"
+          className="block text-sm font-medium text-gray-700"
+        >
           Job Type
         </label>
         <select
@@ -100,7 +111,10 @@ export default function JobForm() {
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
           Job Description
         </label>
         <textarea
@@ -110,12 +124,17 @@ export default function JobForm() {
           rows={4}
         ></textarea>
         {errors.description && (
-          <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.description.message}
+          </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="company" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="company"
+          className="block text-sm font-medium text-gray-700"
+        >
           Company
         </label>
         <input
@@ -130,7 +149,10 @@ export default function JobForm() {
       </div>
 
       <div>
-        <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="location"
+          className="block text-sm font-medium text-gray-700"
+        >
           Location
         </label>
         <input
@@ -145,7 +167,10 @@ export default function JobForm() {
       </div>
 
       <div>
-        <label htmlFor="salaryMin" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="salaryMin"
+          className="block text-sm font-medium text-gray-700"
+        >
           Minimum Salary
         </label>
         <input
@@ -155,12 +180,17 @@ export default function JobForm() {
           className="mt-1 block w-full rounded-md border-2 border-gray-300 bg-gray-50 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
         />
         {errors.salary?.min && (
-          <p className="mt-1 text-sm text-red-600">{errors.salary.min.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.salary.min.message}
+          </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="salaryMax" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="salaryMax"
+          className="block text-sm font-medium text-gray-700"
+        >
           Maximum Salary
         </label>
         <input
@@ -170,17 +200,19 @@ export default function JobForm() {
           className="mt-1 block w-full rounded-md border-2 border-gray-300 bg-gray-50 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
         />
         {errors.salary?.max && (
-          <p className="mt-1 text-sm text-red-600">{errors.salary.max.message}</p>
+          <p className="mt-1 text-sm text-red-600">
+            {errors.salary.max.message}
+          </p>
         )}
       </div>
 
       <button
+        disabled={isPending}
         type="submit"
         className="w-full py-2 px-4 border-2 border-blue-500 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        Submit
+        {isPending ? "Submitting..." : "Submit"}
       </button>
     </form>
-  )
+  );
 }
-

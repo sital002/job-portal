@@ -2,6 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useCreateJobMutation from "../../hooks/useCreateJob";
+import { useParams } from "react-router";
+import useSingleJob from "../../hooks/useSingleJob";
+import useEditJobMutation from "../../hooks/useUpdateJobs";
 
 const jobSchema = z.object({
   title: z
@@ -40,31 +43,57 @@ const jobSchema = z.object({
 export type JobFormValues = z.infer<typeof jobSchema>;
 
 export default function JobForm() {
+  const { jobId } = useParams();
+
+  const {
+    data: job,
+    error,
+    isLoading,
+  } = useSingleJob(jobId as string, "RECRUITER");
+
+  console.log(job);
   const { mutate, isPending } = useCreateJobMutation();
+  const { mutate: updateJob, isPending: isUpdatePending } = useEditJobMutation(
+    jobId as string
+  );
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
-    defaultValues: {
-      title: "",
-      jobType: "full-time",
-      description: "",
-      company: "",
-      location: "",
-      salary: {
-        min: 0,
-        max: 0,
-      },
-    },
+    defaultValues: jobId
+      ? {
+          title: job?.title as string,
+          jobType: job?.type as
+            | "full-time"
+            | "part-time"
+            | "contract"
+            | "internship",
+          description: job?.description as string,
+          company: job?.company as string,
+          location: job?.location as string,
+          salary: {
+            min: job?.salaryRange.min as number,
+            max: job?.salaryRange.max as number,
+          },
+        }
+      : undefined,
+    values: job as unknown as JobFormValues,
   });
 
   async function onSubmit(data: JobFormValues) {
-    console.log(data);
-    mutate(data);
+    if (jobId) {
+      console.log("job id is balalaa fro  recruiter", data);
+      updateJob(data);
+    } else {
+      console.log(data);
+      mutate(data);
+    }
   }
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -207,11 +236,12 @@ export default function JobForm() {
       </div>
 
       <button
-        disabled={isPending}
+        disabled={isPending || isUpdatePending}
         type="submit"
         className="w-full py-2 px-4 border-2 border-blue-500 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         {isPending ? "Submitting..." : "Submit"}
+       
       </button>
     </form>
   );

@@ -40,6 +40,8 @@ function App() {
           <Route element={<RecruiterLayout />}>
             <Route path="recruiter/jobs/new" element={<JobForm />} />
             <Route path="recruiter/jobs/:jobId" element={<SingleJob />} />
+            <Route path="recruiter/jobs/edit/:jobId" element={<JobForm />} />
+
             <Route path="recruiter/jobs" element={<RecruitersJob />} />
           </Route>
         </Route>

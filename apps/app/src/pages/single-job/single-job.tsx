@@ -65,7 +65,7 @@ const SingleJob: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {job?.title}
             </h1>
-            {loading &&
+            {
               user?.role === "USER" &&
               (isBookMarked ? (
                 <button
@@ -100,7 +100,7 @@ const SingleJob: React.FC = () => {
             <span className="text-gray-600">
               Salary Range: {job?.salaryRange.min} - {job?.salaryRange.max}
             </span>
-            {loading && user?.role === "USER" && (
+            {user?.role === "USER" && (
               <button className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
                 Apply Now
               </button>

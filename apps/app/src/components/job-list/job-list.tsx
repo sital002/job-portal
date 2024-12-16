@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
 import { Job } from "../../types/jobs.types";
 import { useAuth } from "../../context/useAuth";
+import apiClient from "../../utils/apiClient";
+
 type JobListProps = {
   jobs: Job[] | undefined;
   error: { message: string } | null;
@@ -12,13 +14,28 @@ type JobListProps = {
 
 const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
   const { user, loading } = useAuth();
+  const [isDeleteLoading, setDeleteLoading] = useState(false);
+
+  async function deleteJob(jobId: string) {
+    console.log("delete job", jobId);
+    try {
+      setDeleteLoading(true);
+      await apiClient.delete(`/jobs/${jobId}`);
+    } catch (error) {
+      console.log("failed to delete", error);
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+  if (isLoading || (loading && !user)) return <p>Loading...</p>;
+  if (isDeleteLoading) return <p>Deleting...</p>;
   return (
     <div className="flex-grow">
       <h2 className="text-xl font-semibold mb-4">
         {jobs?.length} Jobs results
       </h2>
       <div className="space-y-4">
-        {isLoading && <p>Loading...</p>}
+        {isLoading || (loading && <p>Loading...</p>)}
         {error && <p>{error.message}</p>}
         {jobs &&
           jobs.length > 0 &&
@@ -39,12 +56,30 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
               <p className="text-sm text-gray-500 mt-2">
                 Posted {job.createdAt.slice(0, 10)}
               </p>
-              <Link
-                to={`${loading &&user?.role==="USER" ? "/jobs" : "/recruiter/jobs"}/${job._id}`}
-                className="text-blue-600 hover:underline"
-              >
-                View
-              </Link>
+              <div className="flex gap-3">
+                <Link
+                  to={`${loading && user?.role === "USER" ? "/jobs" : "/recruiter/jobs"}/${job._id}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  View
+                </Link>
+                {user?.role === "RECRUITER" && (
+                  <Link
+                    to={`/recruiter/jobs/edit/${job._id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit
+                  </Link>
+                )}
+                {user?.role === "RECRUITER" && (
+                  <button
+                    onClick={() => deleteJob(job._id)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </motion.div>
           ))}
       </div>

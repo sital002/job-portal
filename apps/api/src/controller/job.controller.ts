@@ -128,14 +128,19 @@ export const getJobById = asyncApiHandler(async (req, res) => {
 
 export const deleteJob = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
-  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to delete this job");
+  console.log(req.user, "user");
+  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not recruiter");
   const id = req.params.id;
   if (!id) throw new ApiError(400, "Job id is required");
   if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
-  const job = await JobModel.findByIdAndDelete(id);
+  const job = await JobModel.findById(id);
   if (!job) throw new ApiError(404, "Job not found");
-  if (job.user !== req.user._id) throw new ApiError(403, "You are not authorized to delete this job");
-  return res.status(200).json(new ApiResponse("Job deleted successfully", job));
+  // const id = req.user._id;
+  if (job.user.toString() !== req.user.id.toString()) throw new ApiError(403, "You are not authorized to delete this job okay");
+  const deletedJob = await JobModel.findByIdAndDelete(id);
+  if (!deletedJob) throw new ApiError(500, "Error deleting job");
+
+  return res.status(200).json(new ApiResponse("Job deleted successfully", deletedJob));
 });
 
 export const updateJob = asyncApiHandler(async (req, res) => {
@@ -149,7 +154,7 @@ export const updateJob = asyncApiHandler(async (req, res) => {
 
   const job = await JobModel.findById(id);
   if (!job) throw new ApiError(404, "Job not found");
-  if (job.user !== req.user._id) throw new ApiError(403, "You are not authorized to update this job");
+  if (job.user.toString() !== req.user.id.toString()) throw new ApiError(403, "You are not authorized to update this job");
   job.title = result.data.title;
   job.description = result.data.description;
   job.company = result.data.company;

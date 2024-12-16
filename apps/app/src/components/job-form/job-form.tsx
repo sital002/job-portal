@@ -71,6 +71,8 @@ export default function JobForm() {
     mutate(data);
   }
 
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>{error.message}</p>;
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

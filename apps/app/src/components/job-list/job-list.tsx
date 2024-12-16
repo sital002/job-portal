@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Job } from "../../types/jobs.types";
 import { useAuth } from "../../context/useAuth";
 import apiClient from "../../utils/apiClient";
+import { useQueryClient } from "@tanstack/react-query";
 
 type JobListProps = {
   jobs: Job[] | undefined;
@@ -15,12 +16,17 @@ type JobListProps = {
 const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
   const { user, loading } = useAuth();
   const [isDeleteLoading, setDeleteLoading] = useState(false);
-
+  const queryClient = useQueryClient();
   async function deleteJob(jobId: string) {
     console.log("delete job", jobId);
     try {
       setDeleteLoading(true);
-      await apiClient.delete(`/jobs/${jobId}`);
+      const res = await apiClient.delete(`/jobs/${jobId}`);
+      if (res.data) {
+        queryClient.invalidateQueries({
+          queryKey: ["recruitersJob"],
+        });
+      }
     } catch (error) {
       console.log("failed to delete", error);
     } finally {

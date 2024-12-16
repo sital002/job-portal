@@ -166,6 +166,7 @@ export const updateJob = asyncApiHandler(async (req, res) => {
 
 export const getJob = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
+  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to view this job");
   const jobs = await JobModel.find({ user: req.user._id }).populate("user").exec();
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });

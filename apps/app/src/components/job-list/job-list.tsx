@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
 import { Job } from "../../types/jobs.types";
+import { useAuth } from "../../context/useAuth";
 type JobListProps = {
   jobs: Job[] | undefined;
   error: { message: string } | null;
@@ -10,6 +11,7 @@ type JobListProps = {
 };
 
 const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
+  const { user, loading } = useAuth();
   return (
     <div className="flex-grow">
       <h2 className="text-xl font-semibold mb-4">
@@ -38,7 +40,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
                 Posted {job.createdAt.slice(0, 10)}
               </p>
               <Link
-                to={`/jobs/${job._id}`}
+                to={`${loading &&user?.role==="USER" ? "/jobs" : "/recruiter/jobs"}/${job._id}`}
                 className="text-blue-600 hover:underline"
               >
                 View

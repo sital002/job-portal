@@ -14,13 +14,15 @@ import Unauthorized from "./pages/unauthorized";
 import { ProtectedRoute } from "./routes/job-seeker-route";
 import RecruiterRoute from "./routes/recruiter-route";
 import AdminRoute from "./routes/admin-route";
+import RecruiterLayout from "./components/recruiter-layout";
+import RecruitersJob from "./pages/recruiters-job/recruiters-job";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* Public Routes */}
-          <Route index element={<LandingPage />} />
+        <Route index element={<LandingPage />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="unauthorized" element={<Unauthorized />} />
@@ -29,13 +31,17 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
+
           <Route path="jobs/bookmarks" element={<BookMarkPage />} />
         </Route>
 
         {/* Recruiter Routes */}
-        <Route element={<RecruiterRoute  />}>
-          <Route path="recruiter/jobs/new" element={<JobForm />} />
-          {/* <Route path="recruiter/dashboard" element={<RecruiterDashboard />} /> */}
+        <Route element={<RecruiterRoute />}>
+          <Route element={<RecruiterLayout />}>
+            <Route path="recruiter/jobs/new" element={<JobForm />} />
+            <Route path="recruiter/jobs/:jobId" element={<SingleJob />} />
+            <Route path="recruiter/jobs" element={<RecruitersJob />} />
+          </Route>
         </Route>
 
         {/* Admin Routes */}

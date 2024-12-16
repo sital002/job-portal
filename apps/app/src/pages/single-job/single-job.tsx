@@ -4,8 +4,10 @@ import useSingleJob from "../../hooks/useSingleJob";
 import apiClient from "../../utils/apiClient";
 import useBooking from "../../hooks/useBooking";
 import { Data } from "../bookmark-page/bookmark-page";
+import { useAuth } from "../../context/useAuth";
 
 const SingleJob: React.FC = () => {
+  const { user, loading } = useAuth();
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
@@ -37,7 +39,7 @@ const SingleJob: React.FC = () => {
     }
   }
 
-  if (isLoading || isBookmarksLoading) return <p>Loading...</p>;
+  if (isLoading || isBookmarksLoading || loading) return <p>Loading...</p>;
 
   return (
     <div className="bg-white">
@@ -45,30 +47,41 @@ const SingleJob: React.FC = () => {
       {error && <p>{error.message}</p>}
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-6">
-          <Link to="/jobs" className="text-blue-600 hover:underline">
-            &larr; Back to job listings
-          </Link>
+          {user?.role === "RECRUITER" ? (
+            <Link
+              to="/recruiter/jobs"
+              className="text-blue-600 hover:underline"
+            >
+              &larr; Back to Recruiters Job
+            </Link>
+          ) : (
+            <Link to="/jobs" className="text-blue-600 hover:underline">
+              &larr; Back to job listings
+            </Link>
+          )}
         </div>
         <div className="bg-white border rounded-lg shadow-sm p-6">
           <div className="flex gap-3 items-center justify-between ">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {job?.title}
             </h1>
-            {isBookMarked ? (
-              <button
-                className="text-white px-6 py-2 rounded-md bg-red-500"
-                onClick={() => deleteBookMark(jobId as string)}
-              >
-                Delete
-              </button>
-            ) : (
-              <button
-                onClick={() => addToBookMark(job?._id as string)}
-                className="bg-green-400 text-white px-6 py-2 rounded-md"
-              >
-                Book
-              </button>
-            )}
+            {loading &&
+              user?.role === "USER" &&
+              (isBookMarked ? (
+                <button
+                  className="text-white px-6 py-2 rounded-md bg-red-500"
+                  onClick={() => deleteBookMark(jobId as string)}
+                >
+                  Delete
+                </button>
+              ) : (
+                <button
+                  onClick={() => addToBookMark(job?._id as string)}
+                  className="bg-green-400 text-white px-6 py-2 rounded-md"
+                >
+                  Book
+                </button>
+              ))}
           </div>
           <div className="text-gray-600 mb-4">
             <p>{job?.company}</p>
@@ -87,9 +100,11 @@ const SingleJob: React.FC = () => {
             <span className="text-gray-600">
               Salary Range: {job?.salaryRange.min} - {job?.salaryRange.max}
             </span>
-            <button className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
-              Apply Now
-            </button>
+            {loading && user?.role === "USER" && (
+              <button className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
+                Apply Now
+              </button>
+            )}
           </div>
         </div>
       </main>

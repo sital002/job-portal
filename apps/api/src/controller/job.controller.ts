@@ -164,11 +164,22 @@ export const updateJob = asyncApiHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse("Job updated successfully", updatedJob));
 });
 
-export const getJob = asyncApiHandler(async (req, res) => {
+export const getJobs = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
   if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to view this job");
   const jobs = await JobModel.find({ user: req.user._id }).populate("user").exec();
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
+});
+
+export const getJobCreatedByRecruiter = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to view this job");
+  const id = req.params.id;
+  if (!id) throw new ApiError(400, "Job id is required");
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
+  const job = await JobModel.findOne({ _id: id, user: req.user._id }).populate("user").exec();
+  if (!job) throw new ApiError(404, "Job not found");
+  res.status(200).json(new ApiResponse("Job retrieved successfully", job));
 });
 
 const applyJobSchema = z.object({

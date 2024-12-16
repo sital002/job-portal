@@ -10,6 +10,6 @@ jobRouter.route("/browse/:id").get(getJobById);
 jobRouter.route("/new").post(authenticate, createJob);
 jobRouter.route("/apply/:jobId").post(authenticate, upload.single("resume"), applyJob);
 jobRouter.route("/:id").delete(authenticate, deleteJob).put(authenticate, updateJob);
-jobRouter.route("/").get(getJob);
+jobRouter.route("/").get(authenticate, getJob);
 
 export default jobRouter;

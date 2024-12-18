@@ -42,10 +42,16 @@ export const removeFromBookmark = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
   const result = bookmarkJobSchema.safeParse(req.params);
   if (!result.success) throw new ApiError(400, result.error.errors[0].message);
+
+  const bookmarkExists = await BookmarkModel.findOne({
+    job: result.data.jobId,
+    user: req.user._id,
+  });
+  if (!bookmarkExists) throw new ApiError(404, "Bookmark not found");
   const deletedBookmark = await BookmarkModel.findOneAndDelete({
     job: result.data.jobId,
     user: req.user._id,
   });
-  if (!deletedBookmark) throw new ApiError(404, "Bookmark not found");
+  if (!deletedBookmark) throw new ApiError(404, "Error removing bookmark");
   res.status(200).json(new ApiResponse("Bookmark removed successfully", deletedBookmark));
 });

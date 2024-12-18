@@ -176,6 +176,12 @@ export const getJobs = asyncApiHandler(async (req, res) => {
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });
 
+export const getAppliedJobs = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id }).populate("job").exec();
+  res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
+});
+
 export const getJobCreatedByRecruiter = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
   if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to view this job");
@@ -200,6 +206,7 @@ export const applyJob = asyncApiHandler(async (req, res) => {
   if (!req.file) throw new ApiError(400, "No file uploaded");
   const filePath = req.file.destination + "/" + req.file.filename;
   if (!req.user) throw new ApiError(401, "You are not logged in");
+  if (req.user.role !== "USER") throw new ApiError(403, "You are not authorized to apply for this job");
   const jobId = req.params.jobId;
   if (!jobId) throw new ApiError(400, "jobId is required");
   if (!mongoose.Types.ObjectId.isValid(jobId)) throw new ApiError(400, "Invalid job id");

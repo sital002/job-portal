@@ -5,6 +5,7 @@ import apiClient from "../../utils/apiClient";
 import useBooking from "../../hooks/useBooking";
 import { Data } from "../bookmark-page/bookmark-page";
 import { useAuth } from "../../context/useAuth";
+import JobApplicationForm from "../../components/apply-job-form/apply-job-form";
 
 const SingleJob: React.FC = () => {
   const { user, loading } = useAuth();
@@ -12,6 +13,8 @@ const SingleJob: React.FC = () => {
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
   const [isBookMarked, setIsBookMarked] = useState(false);
+
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (bookmarks) {
@@ -42,72 +45,84 @@ const SingleJob: React.FC = () => {
   if (isLoading || isBookmarksLoading || loading) return <p>Loading...</p>;
 
   return (
-    <div className="bg-white">
-      {isLoading && <p>Loading...</p>}
-      {error && <p>{error.message}</p>}
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-6">
-          {user?.role === "RECRUITER" ? (
-            <Link
-              to="/recruiter/jobs"
-              className="text-blue-600 hover:underline"
-            >
-              &larr; Back to Recruiters Job
-            </Link>
-          ) : (
-            <Link to="/jobs" className="text-blue-600 hover:underline">
-              &larr; Back to job listings
-            </Link>
-          )}
-        </div>
-        <div className="bg-white border rounded-lg shadow-sm p-6">
-          <div className="flex gap-3 items-center justify-between ">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {job?.title}
-            </h1>
-            {
-              user?.role === "USER" &&
-              (isBookMarked ? (
-                <button
-                  className="text-white px-6 py-2 rounded-md bg-red-500"
-                  onClick={() => deleteBookMark(jobId as string)}
-                >
-                  Delete
-                </button>
-              ) : (
-                <button
-                  onClick={() => addToBookMark(job?._id as string)}
-                  className="bg-green-400 text-white px-6 py-2 rounded-md"
-                >
-                  Book
-                </button>
-              ))}
+    <div>
+      <div className="bg-white">
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{error.message}</p>}
+        {show && (
+          <div
+            onClick={() => setShow(false)}
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+          >
+            <JobApplicationForm jobId={jobId as string} />
           </div>
-          <div className="text-gray-600 mb-4">
-            <p>{job?.company}</p>
-            <p>
-              Posted on{" "}
-              {job?.createdAt && new Date(job.createdAt).toDateString()}
-            </p>
-          </div>
+        )}
+        <main className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Job Description</h2>
-            <p className="text-gray-700 mb-4 text-justify">
-              {job?.description}
-            </p>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">
-              Salary Range: {job?.salaryRange.min} - {job?.salaryRange.max}
-            </span>
-            {user?.role === "USER" && (
-              <button className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
-                Apply Now
-              </button>
+            {user?.role === "RECRUITER" ? (
+              <Link
+                to="/recruiter/jobs"
+                className="text-blue-600 hover:underline"
+              >
+                &larr; Back to Recruiters Job
+              </Link>
+            ) : (
+              <Link to="/jobs" className="text-blue-600 hover:underline">
+                &larr; Back to job listings
+              </Link>
             )}
           </div>
-        </div>
-      </main>
+          <div className="bg-white border rounded-lg shadow-sm p-6">
+            <div className="flex gap-3 items-center justify-between ">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {job?.title}
+              </h1>
+              {user?.role === "USER" &&
+                (isBookMarked ? (
+                  <button
+                    className="text-white px-6 py-2 rounded-md bg-red-500"
+                    onClick={() => deleteBookMark(jobId as string)}
+                  >
+                    Delete
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => addToBookMark(job?._id as string)}
+                    className="bg-green-400 text-white px-6 py-2 rounded-md"
+                  >
+                    Book
+                  </button>
+                ))}
+            </div>
+            <div className="text-gray-600 mb-4">
+              <p>{job?.company}</p>
+              <p>
+                Posted on{" "}
+                {job?.createdAt && new Date(job.createdAt).toDateString()}
+              </p>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Job Description</h2>
+              <p className="text-gray-700 mb-4 text-justify">
+                {job?.description}
+              </p>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">
+                Salary Range: {job?.salaryRange.min} - {job?.salaryRange.max}
+              </span>
+              {user?.role === "USER" && (
+                <button
+                  onClick={() => setShow(true)}
+                  className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
+                >
+                  Apply Now
+                </button>
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

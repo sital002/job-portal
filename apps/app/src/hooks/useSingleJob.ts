@@ -9,7 +9,7 @@ export default function useSingleJob(jobId: string | null, role?: string) {
     return apiClient.get(`/jobs/browse/${jobId}`).then((res) => res.data.data);
   };
   return useQuery<Job>({
-    queryKey: role ? ["recruitersJob", jobId] : ["job", jobId],
+    queryKey: role ? ["recruitersJob", jobId, role] : ["job", jobId],
     queryFn: fetchJob,
   });
 }

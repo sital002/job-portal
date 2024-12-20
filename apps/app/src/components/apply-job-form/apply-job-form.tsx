@@ -1,35 +1,28 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
+
+import { useApplyJob } from "../../hooks/useApplyJob";
+import { useState } from "react";
 
 const applyJobSchema = z.object({
   coverLetter: z
     .string()
-    .min(2, "Cover letter must be at least 2 characters long")
-    .max(1024, "Cover letter must be at most 1024 characters long"),
-  resume: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
-    .refine(
-      (file) =>
-        [
-          "application/pdf",
-          "application/msword",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ].includes(file.type),
-      "Only .pdf, .doc and .docx formats are supported."
-    ),
+    .min(2, "Cover letter must be at least 2 characters long"),
 });
 
 type FormData = z.infer<typeof applyJobSchema>;
 
-export default function JobApplicationForm({ jobId }: { jobId: string }) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+export default function JobApplicationForm({
+  jobId,
+  setShow,
+}: {
+  jobId: string;
 
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -38,41 +31,67 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
     resolver: zodResolver(applyJobSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    setSubmitError(null);
-    setSubmitSuccess(false);
+  const {
+    mutate: applyJobMutation,
+    isPending,
+    error,
+    isSuccess,
+  } = useApplyJob(jobId);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const selectedFile = event.target.files[0];
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setFileError(
+          "Invalid file type. Please upload a PDF, DOC, or DOCX file."
+        );
+        return;
+      }
+
+      if (selectedFile.size > maxFileSize) {
+        setFileError("File size exceeds 5MB. Please upload a smaller file.");
+        return;
+      }
+
+      setFile(selectedFile);
+    }
+  };
+
+  const onSubmit = async (data: FormData) => {
     console.log(jobId);
     try {
       const formData = new FormData();
       formData.append("coverLetter", data.coverLetter);
-      formData.append("resume", data.resume);
-
-      //   const response = await axios.post(`/api/jobs/apply/${jobId}`, formData, {
-      //     headers: {
-      //       'Content-Type': 'multipart/form-data'
-      //     }
-      //   })
-
-      setSubmitSuccess(true);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setSubmitError(
-          error.response.data.message ||
-            "An error occurred while submitting your application."
-        );
+      if (file) {
+        formData.append("resume", file);
       } else {
-        setSubmitError("An unexpected error occurred. Please try again.");
+        setFileError("Please upload a resume.");
       }
-    } finally {
-      setIsSubmitting(false);
+
+      applyJobMutation(formData);
+    } catch (error) {
+      console.error("Failed to apply for job:", error);
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Apply for Job</h2>
+      <div className="flex gap-3 items-center justify-center">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Apply for Job</h2>
+        <span
+          onClick={() => setShow(false)}
+          className="bg-red-400  px-4 py-3 cursor-pointer"
+        >
+          X
+        </span>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label
@@ -84,8 +103,8 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
           <input
             type="file"
             id="resume"
+            onChange={handleFileChange}
             accept=".pdf,.doc,.docx"
-            {...register("resume")}
             className="block w-full text-sm text-gray-500
               file:mr-4 file:py-2 file:px-4
               file:rounded-md file:border-0
@@ -93,8 +112,9 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
               file:bg-blue-50 file:text-blue-700
               hover:file:bg-blue-100"
           />
-          {errors.resume && (
-            <p className="mt-1 text-sm text-red-600">{errors.resume.message}</p>
+          {file && <p>{file.name}</p>}
+          {fileError && (
+            <p className="mt-1 text-sm text-red-600">{fileError}</p>
           )}
         </div>
 
@@ -119,11 +139,9 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
           )}
         </div>
 
-        {submitError && (
-          <div className="text-red-600 text-sm">{submitError}</div>
-        )}
+        {error && <div className="text-red-600 text-sm">{error.message}</div>}
 
-        {submitSuccess && (
+        {isSuccess && (
           <div className="text-green-600 text-sm">
             Your application has been submitted successfully!
           </div>
@@ -131,10 +149,10 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
           className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {isSubmitting ? "Submitting..." : "Submit Application"}
+          {isPending ? "Submitting..." : "Submit Application"}
         </button>
       </form>
     </div>

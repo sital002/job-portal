@@ -6,13 +6,17 @@ import useBooking from "../../hooks/useBooking";
 import { Data } from "../bookmark-page/bookmark-page";
 import { useAuth } from "../../context/useAuth";
 import JobApplicationForm from "../../components/apply-job-form/apply-job-form";
+import { useGetAppliedJob } from "../../hooks/useGetAppliedJob";
+import { JobApplication } from "../../types/applied-job.types";
 
 const SingleJob: React.FC = () => {
   const { user, loading } = useAuth();
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
+  const { data: appliedJobs } = useGetAppliedJob();
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
 
   const [show, setShow] = useState(false);
 
@@ -21,6 +25,14 @@ const SingleJob: React.FC = () => {
       setIsBookMarked(bookmarks.some((el: Data) => el.job._id === jobId));
     }
   }, [bookmarks, jobId]);
+
+  useEffect(() => {
+    if (appliedJobs) {
+      setIsApplied(
+        appliedJobs.some((el: JobApplication) => el.job._id === jobId)
+      );
+    }
+  }, [appliedJobs, jobId]);
 
   async function addToBookMark(jobId: string) {
     try {
@@ -50,11 +62,8 @@ const SingleJob: React.FC = () => {
         {isLoading && <p>Loading...</p>}
         {error && <p>{error.message}</p>}
         {show && (
-          <div
-            onClick={() => setShow(false)}
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-          >
-            <JobApplicationForm jobId={jobId as string} />
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col items-center justify-center">
+            <JobApplicationForm jobId={jobId as string} setShow={setShow} />
           </div>
         )}
         <main className="container mx-auto px-4 py-8 max-w-4xl">
@@ -113,10 +122,11 @@ const SingleJob: React.FC = () => {
               </span>
               {user?.role === "USER" && (
                 <button
+                  disabled={isApplied}
                   onClick={() => setShow(true)}
                   className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
                 >
-                  Apply Now
+                  {isApplied ? "Applied" : "Apply Now"}
                 </button>
               )}
             </div>

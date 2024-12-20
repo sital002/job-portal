@@ -17,6 +17,8 @@ import AdminRoute from "./routes/admin-route";
 import RecruiterLayout from "./components/recruiter-layout";
 import RecruitersJob from "./pages/recruiters-job/recruiters-job";
 import EditJobForm from "./components/job-form/edit-job-form";
+import AppliedJobs from "./pages/applied-jobs/applied-jobs";
+import SingleAppliedJobs from "./pages/applied-jobs/single-applied-job";
 
 function App() {
   return (
@@ -32,6 +34,9 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
+          <Route path="jobs/appliedJobs" element={<AppliedJobs />} />
+          <Route path="jobs/appliedJobs/:jobId" element={<SingleAppliedJobs />} />
+
 
           <Route path="jobs/bookmarks" element={<BookMarkPage />} />
         </Route>

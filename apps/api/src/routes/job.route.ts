@@ -14,6 +14,7 @@ import {
   getApplicationById,
   getAllApplications,
   updateApplication,
+  viewApplicationStatus,
 } from "../controller/job.controller";
 import { authenticate } from "../middleware/authenticate";
 import upload from "../utils/multer";
@@ -28,6 +29,7 @@ jobRouter.route("/").get(authenticate, getJobs);
 jobRouter.route("/apply/:jobId").post(authenticate, upload.single("resume"), applyJob);
 jobRouter.route("/applied-jobs").get(authenticate, getAppliedJobs);
 jobRouter.route("/applied-jobs/:id").get(authenticate, getAppliedJobById);
+jobRouter.route("/view-application-status/:id").get(authenticate, viewApplicationStatus);
 
 // RECRUITER ROUTES
 jobRouter.route("/new").post(authenticate, createJob);

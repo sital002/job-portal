@@ -235,32 +235,42 @@ const applyJobSchema = z.object({
     .max(1024, "Cover letter must be at most 1024 characters long"),
 });
 
+export const viewApplicationStatus = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const id = req.params.id;
+  if (!id) throw new ApiError(400, "ApplicationId id is required");
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
+  const job = await ApplicationModel.findOne({ _id: id, applicant: req.user._id }).populate("job").exec();
+  if (!job) throw new ApiError(404, "Application not found");
+  res.status(200).json(new ApiResponse("Application retrieved successfully", job));
+});
+
 export const getApplicationById = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
   if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to view this job");
   const id = req.params.id;
-  if (!id) throw new ApiError(400, "Job id is required");
+  if (!id) throw new ApiError(400, "ApplicationId id is required");
   if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
   const job = await ApplicationModel.findOne({ _id: id }).populate("job").exec();
-  if (!job) throw new ApiError(404, "Job not found");
-  res.status(200).json(new ApiResponse("Job retrieved successfully", job));
+  if (!job) throw new ApiError(404, "Application not found");
+  res.status(200).json(new ApiResponse("Application retrieved successfully", job));
 });
 
 export const updateApplication = asyncApiHandler(async (req, res) => {
   if (!req.user) throw new ApiError(401, "You are not logged in");
   if (req.user.role !== "RECRUITER") throw new ApiError(403, "You are not authorized to update this job");
   const id = req.params.id;
-  if (!id) throw new ApiError(400, "Job id is required");
+  if (!id) throw new ApiError(400, "Application id is required");
   if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid job id");
   const job = await ApplicationModel.findOne({ _id: id });
-  if (!job) throw new ApiError(404, "Job not found");
+  if (!job) throw new ApiError(404, "Application not found");
   const status = req.body.status;
   if (!status) throw new ApiError(400, "Status is required");
   if (!["REJECTED", "INTERVIEWING", "HIRED"].includes(status)) throw new ApiError(400, "Invalid status");
   job.status = status;
   const updatedJob = await job.save();
-  if (!updatedJob) throw new ApiError(500, "Error updating job");
-  res.status(200).json(new ApiResponse("Job updated successfully", updatedJob));
+  if (!updatedJob) throw new ApiError(500, "Error updating application");
+  res.status(200).json(new ApiResponse("Application updated successfully", updatedJob));
 });
 
 export const getAllApplications = asyncApiHandler(async (req, res) => {
@@ -274,7 +284,7 @@ export const getAllApplications = asyncApiHandler(async (req, res) => {
   })
     .populate("job")
     .exec();
-  res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
+  res.status(200).json(new ApiResponse("Applications retrieved successfully", jobs));
 });
 
 export const applyJob = asyncApiHandler(async (req, res) => {

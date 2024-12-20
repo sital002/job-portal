@@ -7,18 +7,19 @@ import { Data } from "../bookmark-page/bookmark-page";
 import { useAuth } from "../../context/useAuth";
 import JobApplicationForm from "../../components/apply-job-form/apply-job-form";
 import { useGetAppliedJob } from "../../hooks/useGetAppliedJob";
-import { JobApplication } from "../../types/applied-job.types";
+// import { JobApplication } from "../../types/applied-job.types";
 
 const SingleJob: React.FC = () => {
   const { user, loading } = useAuth();
   const { jobId } = useParams();
   const { data: job, error, isLoading } = useSingleJob(jobId as string);
   const { data: bookmarks, isLoading: isBookmarksLoading } = useBooking();
-  const { data: appliedJobs } = useGetAppliedJob();
+  const { data: appliedJobs, isLoading: isAppliedJobLoading } =useGetAppliedJob();
   const [isBookMarked, setIsBookMarked] = useState(false);
-  const [isApplied, setIsApplied] = useState(false);
+  // const [isApplied, setIsApplied] = useState(false);
 
   const [show, setShow] = useState(false);
+  console.log(appliedJobs);
 
   useEffect(() => {
     if (bookmarks) {
@@ -26,13 +27,13 @@ const SingleJob: React.FC = () => {
     }
   }, [bookmarks, jobId]);
 
-  useEffect(() => {
-    if (appliedJobs) {
-      setIsApplied(
-        appliedJobs.some((el: JobApplication) => el.job._id === jobId)
-      );
-    }
-  }, [appliedJobs, jobId]);
+  // useEffect(() => {
+  //   if (appliedJobs) {
+  //     setIsApplied(
+  //       appliedJobs.some((el: JobApplication) => el.job._id === jobId)
+  //     );
+  //   }
+  // }, [appliedJobs, jobId]);
 
   async function addToBookMark(jobId: string) {
     try {
@@ -53,6 +54,7 @@ const SingleJob: React.FC = () => {
       console.log("failed to delete", error);
     }
   }
+  if (isAppliedJobLoading) return <p>Loading...</p>;
 
   if (isLoading || isBookmarksLoading || loading) return <p>Loading...</p>;
 
@@ -122,11 +124,11 @@ const SingleJob: React.FC = () => {
               </span>
               {user?.role === "USER" && (
                 <button
-                  disabled={isApplied}
+                  // disabled={isApplied}
                   onClick={() => setShow(true)}
                   className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
                 >
-                  {isApplied ? "Applied" : "Apply Now"}
+                  { "Apply Now"}
                 </button>
               )}
             </div>

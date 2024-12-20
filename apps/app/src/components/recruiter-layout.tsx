@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Outlet, NavLink } from "react-router-dom";
 
 const RecruiterLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -12,36 +12,58 @@ const RecruiterLayout: React.FC = () => {
     };
 
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
 
-    return () => window.removeEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const navLinkClasses = ({ isActive }: { isActive: boolean, end?: boolean }) =>
+  const navLinkClasses = ({ isActive }: { isActive: boolean; end?: boolean }) =>
     `block py-2 px-4 rounded transition-colors ${
       isActive
-        ? 'bg-blue-100 text-blue-700 font-medium'
-        : 'text-gray-700 hover:bg-blue-50'
+        ? "bg-blue-100 text-blue-700 font-medium"
+        : "text-gray-700 hover:bg-blue-50"
     }`;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex flex-grow-0 min-h-screen">
       <button
         className="fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded-md transition-all duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         onClick={toggleSidebar}
         aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
       >
         {isSidebarOpen ? (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         )}
       </button>
@@ -49,8 +71,8 @@ const RecruiterLayout: React.FC = () => {
       <aside
         className={`
           w-64 bg-white shadow-md transition-all duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          ${isMobile ? 'fixed inset-y-0 left-0 z-40' : ''}
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isMobile ? "fixed inset-y-0 left-0 z-40" : ""}
         `}
       >
         <nav className="p-4">
@@ -84,7 +106,9 @@ const RecruiterLayout: React.FC = () => {
         </nav>
       </aside>
 
-      <main className={`flex-grow p-8 transition-all duration-300 ease-in-out ${isSidebarOpen && !isMobile ? 'md:ml-64' : ''}`}>
+      <main
+        className={`flex-grow  p-8 transition-all  duration-300 ease-in-out ${isSidebarOpen && !isMobile ? "md:ml-64" : ""}`}
+      >
         <Outlet />
       </main>
     </div>
@@ -92,4 +116,3 @@ const RecruiterLayout: React.FC = () => {
 };
 
 export default RecruiterLayout;
-

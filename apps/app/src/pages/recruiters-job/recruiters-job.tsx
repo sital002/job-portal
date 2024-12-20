@@ -9,8 +9,8 @@ function RecruitersJob() {
   if (isError) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      RecruitersJob
+    <div className="w-full bg-red-100 ">
+      {/* RecruitersJob */}
       <JobList
         jobs={recruitersJob as Job[]}
         error={error}

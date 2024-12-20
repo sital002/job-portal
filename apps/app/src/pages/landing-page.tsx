@@ -30,15 +30,17 @@ export default function LandingPage() {
                 <span>Find Jobs</span>
               </motion.a>
             </Link>
-            <motion.a
-              href="#"
-              className="bg-green-600 text-white px-8 py-3 rounded-full hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <PlusCircle className="w-5 h-5" />
-              <span>Post a Job</span>
-            </motion.a>
+            <Link to={`recruiter/jobs/new`}>
+              <motion.a
+                href="#"
+                className="bg-green-600 text-white px-8 py-3 rounded-full hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <PlusCircle className="w-5 h-5" />
+                <span>Post a Job</span>
+              </motion.a>
+            </Link>
           </div>
         </motion.section>
 

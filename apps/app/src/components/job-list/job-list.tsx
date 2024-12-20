@@ -64,7 +64,11 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
               </p>
               <div className="flex gap-3">
                 <Link
-                  to={user?.role === "RECRUITER" ? `/recruiter/jobs/${job._id}` : `/jobs/${job._id}`}
+                  to={
+                    user?.role === "RECRUITER"
+                      ? `/recruiter/jobs/${job._id}`
+                      : `/jobs/${job._id}`
+                  }
                   className="text-blue-600 hover:underline"
                 >
                   View
@@ -84,6 +88,14 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
                   >
                     Delete
                   </button>
+                )}
+                {user?.role === "RECRUITER" && (
+                  <Link
+                    to={`/recruiter/applicants/${job._id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    View Applicants
+                  </Link>
                 )}
               </div>
             </motion.div>

@@ -1,26 +1,16 @@
-import { useGetAppliedJob } from "../../hooks/useGetAppliedJob";
+import { useParams } from "react-router";
+import { useGetApplications } from "../../hooks/useGetApplications";
 import { Link } from "react-router-dom";
 
+function RecruitersApplicant() {
+  const { jobId } = useParams();
 
-function AppliedJobsTable() {
-  const { data, isLoading } = useGetAppliedJob();
+  const { data: appliedJobs, isLoading: isAppliedJobLoading } =
+    useGetApplications(jobId as string);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  if (isAppliedJobLoading) return <p>Loading...</p>;
 
-  if (!data) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-xl text-gray-600">No applied jobs found</p>
-      </div>
-    );
-  }
-
+  console.log(appliedJobs);
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Applied Jobs</h1>
@@ -43,7 +33,7 @@ function AppliedJobsTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data?.map((job, index: number) => (
+            {appliedJobs?.map((job, index: number) => (
               <tr
                 key={index}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
@@ -74,7 +64,7 @@ function AppliedJobsTable() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <Link
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"
-                    to={`/jobs/appliedJobs/${job._id}`}
+                    to={`/recruiter/applicant/${job._id}`}
                   >
                     View
                   </Link>
@@ -88,4 +78,4 @@ function AppliedJobsTable() {
   );
 }
 
-export default AppliedJobsTable;
+export default RecruitersApplicant;

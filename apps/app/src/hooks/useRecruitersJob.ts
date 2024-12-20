@@ -4,7 +4,7 @@ import apiClient from "../utils/apiClient";
 
 export default function useRecruitersJob() {
   const fetchRecruitersJob = async () => {
-    const response = await apiClient.get("/jobs");
+    const response = await apiClient.get("/jobs/created-jobs");
     console.log(response.data.data);
     return response.data.data;
   };

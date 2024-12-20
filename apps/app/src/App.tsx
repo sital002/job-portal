@@ -19,6 +19,9 @@ import RecruitersJob from "./pages/recruiters-job/recruiters-job";
 import EditJobForm from "./components/job-form/edit-job-form";
 import AppliedJobs from "./pages/applied-jobs/applied-jobs";
 import SingleAppliedJobs from "./pages/applied-jobs/single-applied-job";
+import RecruiterDashboard from "./pages/dashboard/recruiter-dashboard";
+import RecruitersApplicant from "./pages/recruiters-job/recruiter-applicants";
+import RecruitersApplicantSingle from "./pages/recruiters-job/recruiter-single-applicant";
 
 function App() {
   return (
@@ -35,8 +38,10 @@ function App() {
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
           <Route path="jobs/appliedJobs" element={<AppliedJobs />} />
-          <Route path="jobs/appliedJobs/:jobId" element={<SingleAppliedJobs />} />
-
+          <Route
+            path="jobs/appliedJobs/:jobId"
+            element={<SingleAppliedJobs />}
+          />
 
           <Route path="jobs/bookmarks" element={<BookMarkPage />} />
         </Route>
@@ -44,6 +49,11 @@ function App() {
         {/* Recruiter Routes */}
         <Route element={<RecruiterRoute />}>
           <Route element={<RecruiterLayout />}>
+            <Route
+              path="recruiter/dashboard"
+              element={<RecruiterDashboard />}
+            />
+
             <Route path="recruiter/jobs/new" element={<JobForm />} />
             <Route path="recruiter/jobs/:jobId" element={<SingleJob />} />
             <Route
@@ -52,6 +62,14 @@ function App() {
             />
 
             <Route path="recruiter/jobs" element={<RecruitersJob />} />
+            <Route
+              path="recruiter/applicants/:jobId"
+              element={<RecruitersApplicant />}
+            />
+            <Route
+              path="recruiter/applicant/:id"
+              element={<RecruitersApplicantSingle />}
+            />
           </Route>
         </Route>
 

@@ -34,6 +34,6 @@ jobRouter.route("/new").post(authenticate, createJob);
 jobRouter.route("/created-jobs").get(authenticate, getjobsCreatedByRecruiter);
 jobRouter.route("/:id").delete(authenticate, deleteJob).put(authenticate, updateJob).get(authenticate, getJobCreatedByRecruiter);
 jobRouter.route("/application/:id").get(authenticate, getApplicationById).put(authenticate, updateApplication);
-jobRouter.route("/applicaions/:jobId").get(authenticate, getAllApplications);
+jobRouter.route("/applications/:jobId").get(authenticate, getAllApplications);
 
 export default jobRouter;

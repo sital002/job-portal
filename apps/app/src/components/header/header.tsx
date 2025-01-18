@@ -5,7 +5,6 @@ import { useAuth } from "../../context/useAuth";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
-  console.log(user);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -14,7 +13,6 @@ const Header: React.FC = () => {
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
-      // Handle logout error (e.g., show error message to user)
     }
   };
 
@@ -36,9 +34,49 @@ const Header: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="space-x-6"
         >
+          {user?.role === "USER" && (
+            <div>
+              {" "}
+              <NavLink
+                to={"/jobs"}
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold underline transition duration-300"
+                    : "text-gray-600 hover:text-blue-600 transition duration-300"
+                }
+              >
+                Jobs
+              </NavLink>
+              <NavLink
+                to={"/jobs/appliedJobs"}
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold underline transition duration-300"
+                    : "text-gray-600 hover:text-blue-600 transition duration-300"
+                }
+              >
+                Applied Jobs
+              </NavLink>
+              <NavLink
+                to={"/jobs/bookmarks"}
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold underline transition duration-300"
+                    : "text-gray-600 hover:text-blue-600 transition duration-300"
+                }
+              >
+                Bookmarks
+              </NavLink>
+            </div>
+          )}
           <NavLink
             to={"/about"}
-            className="text-gray-600 hover:text-blue-600 transition duration-300"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 font-semibold underline transition duration-300"
+                : "text-gray-600 hover:text-blue-600 transition duration-300"
+            }
           >
             About Us
           </NavLink>

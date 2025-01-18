@@ -3,7 +3,7 @@ import SearchBar from "../../components/search-bar/search-bar";
 import JobList from "../../components/job-list/job-list";
 import FilterSidebar from "../../components/filter-sidebar/filter-sidebar";
 import { motion } from "framer-motion";
-import SimplePagination from "../../components/pagination-component";
+// import SimplePagination from "../../components/pagination-component";
 import useJobs from "../../hooks/useJobs";
 export type Filter = {
   title: string;
@@ -22,22 +22,18 @@ const JobPage: React.FC = () => {
     maxSalary: 100000,
     datePosted: "Anytime",
   });
-  const [currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
-  const totalPages = 23; 
-  const {
-    data: jobs,
-    error,
-    isLoading,
-  } = useJobs(filter, { totalPages, limit });
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const limit = 10;
+  // const totalPages = 23;
+  const { data: jobs, error, isLoading } = useJobs(filter);
 
   console.log(jobs);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // Here you would typically fetch data for the new page
-    console.log(`Fetching data for page ${page}`);
-  };
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  //   // Here you would typically fetch data for the new page
+  //   console.log(`Fetching data for page ${page}`);
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">
@@ -54,11 +50,11 @@ const JobPage: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-8 mt-8">
           <FilterSidebar setFilter={setFilter} filter={filter} />
           <JobList jobs={jobs} error={error} isLoading={isLoading} />
-          <SimplePagination
+          {/* <SimplePagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-          />
+          /> */}
         </div>
       </main>
     </div>

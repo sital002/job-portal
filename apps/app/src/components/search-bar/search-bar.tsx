@@ -9,9 +9,16 @@ type SearchbarProps = {
 const SearchBar: React.FC<SearchbarProps> = ({ setFilter, filter }) => {
   const [title, setTitle] = useState<string>("");
   const [location, setLocation] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!title) {
+      setError("Please enter a title");
+    }
+    if (!location) {
+      setError("Please enter a location");
+    }
     setFilter({ ...filter, title, location });
   };
   return (
@@ -43,6 +50,7 @@ const SearchBar: React.FC<SearchbarProps> = ({ setFilter, filter }) => {
           Find jobs
         </button>
       </form>
+      {error && <p className="text-red-600 mt-2">{error}</p>}
     </motion.div>
   );
 };

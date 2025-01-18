@@ -6,19 +6,39 @@ type FilterSidebarProps = {
   filter: Filter;
   setFilter: (filter: Filter) => void;
 };
+
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter }) => {
-  const [datePosted, setDatePosted] = useState<number>(0);
+  const [datePosted, setDatePosted] = useState<string>("");
   const [jobType, setJobType] = useState<string[]>([]);
-  const [salaryRange, setSalaryRange] = useState<number>(0);
+  const [minSalary, setMinSalary] = useState<string>("");
+  const [maxSalary, setMaxSalary] = useState<string>("");
+
+  const getDateRange = (days: number): string => {
+    if (days === 0) return "";
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    return date.toISOString();
+  };
 
   useEffect(() => {
     setFilter({
       ...filter,
-      datePosted: datePosted.toString(),
+      datePosted: getDateRange(Number(datePosted)),
       type: jobType,
-      minSalary: salaryRange,
+      minSalary: minSalary ? parseInt(minSalary, 10) : 0,
+      maxSalary: maxSalary ? parseInt(maxSalary, 10) : 100000,
     });
-  }, [datePosted, jobType, salaryRange]);
+  }, [datePosted, jobType, minSalary, maxSalary]);
+
+  const handleSalaryChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const value = e.target.value;
+    if (value === "" || /^\d+$/.test(value)) {
+      setter(value);
+    }
+  };
 
   return (
     <motion.aside
@@ -34,97 +54,77 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter }) => {
           <select
             className="w-full px-2 py-1 border rounded-md"
             value={datePosted}
-            onChange={(e) => setDatePosted(Number(e.target.value))}
+            onChange={(e) => setDatePosted(e.target.value)}
           >
-            <option value={0}>Anytime</option>
-            <option value={1}>Past 24 hours</option>
-            <option value={2}>Past week</option>
-            <option value={3}>Past month</option>
+            <option value="">Anytime</option>
+            <option value="1">Past 24 hours</option>
+            <option value="7">Past week</option>
+            <option value="30">Past month</option>
           </select>
         </div>
         <div>
           <h3 className="font-medium mb-2">Job Type</h3>
           <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2"
-                value="full time"
-                onChange={(e) =>
-                  setJobType((prev) =>
-                    prev.includes(e.target.value)
-                      ? prev.filter((val) => val !== e.target.value)
-                      : [...prev, e.target.value]
-                  )
-                }
-              />
-              Full-time
-            </label>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2"
-                value="part time"
-                onChange={(e) =>
-                  setJobType((prev) =>
-                    prev.includes(e.target.value)
-                      ? prev.filter((val) => val !== e.target.value)
-                      : [...prev, e.target.value]
-                  )
-                }
-              />
-              Part-time
-            </label>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2"
-                value="intern"
-                onChange={(e) =>
-                  setJobType((prev) =>
-                    prev.includes(e.target.value)
-                      ? prev.filter((val) => val !== e.target.value)
-                      : [...prev, e.target.value]
-                  )
-                }
-              />
-              Intern
-            </label>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2"
-                value="remote"
-                onChange={(e) =>
-                  setJobType((prev) =>
-                    prev.includes(e.target.value)
-                      ? prev.filter((val) => val !== e.target.value)
-                      : [...prev, e.target.value]
-                  )
-                }
-              />
-              Remote
-            </label>
+            {["full time", "part time", "intern", "remote"].map((type) => (
+              <label key={type} className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  value={type}
+                  checked={jobType.includes(type)}
+                  onChange={(e) =>
+                    setJobType((prev) =>
+                      prev.includes(e.target.value)
+                        ? prev.filter((val) => val !== e.target.value)
+                        : [...prev, e.target.value]
+                    )
+                  }
+                />
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </label>
+            ))}
           </div>
         </div>
         <div>
           <h3 className="font-medium mb-2">Salary Range</h3>
-          <input
-            type="range"
-            className="w-full"
-            value={salaryRange}
-            min="0"
-            max="50000"
-            step="1000"
-            onChange={(e) => setSalaryRange(Number(e.target.value))}
-          />
-        </div>
-        <div>
-          <h3 className="font-medium mb-2">Company</h3>
-          <label className="flex items-center">
-            <input type="checkbox" className="mr-2" />
-            Google
-          </label>
+          <div className="flex items-center space-x-2">
+            <div className="flex-1">
+              <label htmlFor="minSalary" className="text-sm text-gray-600">
+                Min
+              </label>
+              <div className="relative">
+                <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  $
+                </span>
+                <input
+                  id="minSalary"
+                  type="text"
+                  className="w-full pl-6 pr-2 py-1 border rounded-md"
+                  value={minSalary}
+                  onChange={(e) => handleSalaryChange(e, setMinSalary)}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div className="flex-1">
+              <label htmlFor="maxSalary" className="text-sm text-gray-600">
+                Max
+              </label>
+              <div className="relative">
+                <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                  $
+                </span>
+                <input
+                  id="maxSalary"
+                  type="text"
+                  className="w-full pl-6 pr-2 py-1 border rounded-md"
+                  value={maxSalary}
+                  onChange={(e) => handleSalaryChange(e, setMaxSalary)}
+                  placeholder="No limit"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </motion.aside>

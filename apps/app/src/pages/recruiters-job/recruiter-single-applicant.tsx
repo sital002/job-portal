@@ -1,7 +1,13 @@
-import React from "react";
 import { useGetApplicationById } from "../../hooks/useGetApplicationById";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { pdfjs } from "react-pdf";
+import PdfComponent from "./PdfComponennt";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 function RecruitersApplicantSingle() {
   const { id } = useParams();
@@ -47,7 +53,9 @@ function RecruitersApplicantSingle() {
           </div>
           <div className="text-sm text-gray-600 mb-2">
             <span className="font-medium">Applied on:</span>{" "}
-            {data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}
+            {data?.createdAt
+              ? new Date(data.createdAt).toLocaleDateString()
+              : "N/A"}
           </div>
           <div className="text-sm text-gray-600">
             <span className="font-medium">Applicant:</span> {data?.applicant}
@@ -60,6 +68,9 @@ function RecruitersApplicantSingle() {
           <p className="text-sm text-gray-600 line-clamp-3">
             {data?.coverLetter}
           </p>
+        </div>
+        <div className="bg-gray-50 px-6 py-4">
+          <PdfComponent file={data?.resume || ""} />
         </div>
       </div>
     </div>

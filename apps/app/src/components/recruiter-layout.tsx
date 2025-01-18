@@ -92,11 +92,7 @@ const RecruiterLayout: React.FC = () => {
                 Manage Jobs
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/recruiter/applicants" className={navLinkClasses}>
-                View Applicants
-              </NavLink>
-            </li>
+           
             <li>
               <NavLink to="/recruiter/profile" className={navLinkClasses}>
                 Profile
@@ -107,7 +103,7 @@ const RecruiterLayout: React.FC = () => {
       </aside>
 
       <main
-        className={`flex-grow  p-8 transition-all  duration-300 ease-in-out ${isSidebarOpen && !isMobile ? "md:ml-64" : ""}`}
+        className={`flex-grow p-8 transition-all  duration-300 ease-in-out ${isSidebarOpen && !isMobile ? "md:ml-64" : ""}`}
       >
         <Outlet />
       </main>

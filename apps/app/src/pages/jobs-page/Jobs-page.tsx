@@ -23,12 +23,15 @@ const JobPage: React.FC = () => {
     datePosted: "Anytime",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 3; // This could be dynamically set based on your data
-  const limit = 5;
-  const { data: jobs, error, isLoading } = useJobs(filter,{totalPages,limit});
+  const limit = 10;
+  const totalPages = 23; 
+  const {
+    data: jobs,
+    error,
+    isLoading,
+  } = useJobs(filter, { totalPages, limit });
 
-
-
+  console.log(jobs);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

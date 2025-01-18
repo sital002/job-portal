@@ -11,7 +11,7 @@ function PdfComponent({ file }: { file: string }) {
   }
 
   return (
-    <div>
+    <div> 
       <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
         <Page
           pageNumber={pageNumber}

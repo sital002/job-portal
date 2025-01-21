@@ -317,3 +317,49 @@ export const applyJob = asyncApiHandler(async (req, res) => {
 
   res.status(201).json(new ApiResponse("Job applied successfully", application));
 });
+
+export const getAppliedJobsByUser = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id }).populate("job").exec();
+  res.status(200).json(
+    new ApiResponse("Jobs retrieved successfully", {
+      totalJobs: jobs.length,
+    }),
+  );
+});
+
+export const getAcceptedJobsByUser = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id, status: "HIRED" }).populate("job").exec();
+  res.status(200).json(
+    new ApiResponse("Jobs retrieved successfully", {
+      totalAcceptedJobs: jobs.length,
+    }),
+  );
+});
+
+export const getRejectedJobs = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id, status: "REJECTED" }).populate("job").exec();
+  res.status(200).json(
+    new ApiResponse("Jobs retrieved successfully", {
+      totalRejectedJobs: jobs.length,
+    }),
+  );
+});
+
+export const getPendingJobs = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id, status: "APPLIED" }).populate("job").exec();
+  res.status(200).json(
+    new ApiResponse("Jobs retrieved successfully", {
+      totalPendingJobs: jobs.length,
+    }),
+  );
+});
+
+export const getRecentAppliedJobs = asyncApiHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const jobs = await ApplicationModel.find({ applicant: req.user._id }).sort({ createdAt: -1 }).limit(5).populate("job").exec();
+  res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
+});

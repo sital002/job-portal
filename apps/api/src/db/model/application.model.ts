@@ -7,7 +7,7 @@ export interface IApplication extends mongoose.Document {
   job: Schema.Types.ObjectId;
   resume: string;
   coverLetter: string;
-  status: "APPLIED" | "REJECTED" | "INTERWIEING" | "HIRED";
+  status: "APPLIED" | "REJECTED" | "INTERVIEWING" | "HIRED";
   createdAt: Date;
   updatedAt: Date;
 }

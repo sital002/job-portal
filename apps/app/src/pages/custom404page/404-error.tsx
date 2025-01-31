@@ -37,9 +37,9 @@ export default function Custom404() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <img
-          src="assets/404pic.png"
+          src="/404pic.png"
           alt="404 Error - Robot looking confused"
-          className="w-full h-2/5 rounded-lg shadow-lg object-cover"
+          className="w-full h-[500px] rounded-lg shadow-lg object-cover"
         />
       </motion.div>
     </div>

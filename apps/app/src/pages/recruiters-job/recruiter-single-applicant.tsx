@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { pdfjs } from "react-pdf";
 import PdfComponent from "./PdfComponennt";
 
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
@@ -50,6 +51,8 @@ function RecruitersApplicantSingle() {
             >
               {data?.status}
             </span>
+
+          
           </div>
           <div className="text-sm text-gray-600 mb-2">
             <span className="font-medium">Applied on:</span>{" "}

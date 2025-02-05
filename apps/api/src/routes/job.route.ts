@@ -38,7 +38,7 @@ jobRouter.route("/view-application-status/:id").get(authenticate, viewApplicatio
 
 jobRouter.route("/total-applied-jobs").get(authenticate, getAppliedJobsByUser);
 jobRouter.route("/total-accepted-jobs").get(authenticate, getAcceptedJobsByUser);
-jobRouter.route("/total-accepted-jobs").get(authenticate, getRejectedJobs);
+jobRouter.route("/total-Rejected-jobs").get(authenticate, getRejectedJobs);
 jobRouter.route("/total-pending-jobs").get(authenticate, getPendingJobs);
 jobRouter.route("/recent-applied-jobs").get(authenticate, getRecentAppliedJobs);
 

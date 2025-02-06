@@ -1,12 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../utils/apiClient";
+import { JobApplication } from "../types/applied-job.types";
+
+type TotalAppliedJobs = {
+  totalJobs: number;
+};
+
+type TotalAcceptedJobs = {
+  totalAcceptedJobs: number;
+};
+type TotalRejectedJobs = {
+  totalRejectedJobs: number;
+};
+
+type TotalPendingJobs = {
+  totalPendingJobs: number;
+};
 
 export const useGetTotalAppliedJobs = () => {
   const fetchTotalAppliedJobs = async () => {
     const response = await apiClient.get("/jobs/total-applied-jobs");
     return response.data.data;
   };
-  return useQuery({
+  return useQuery<TotalAppliedJobs>({
     queryFn: fetchTotalAppliedJobs,
     queryKey: ["totalAppliedJobs"],
   });
@@ -17,7 +33,7 @@ export const useGetTotalAcceptedJobs = () => {
     const response = await apiClient.get("/jobs/total-accepted-jobs");
     return response.data.data;
   };
-  return useQuery({
+  return useQuery<TotalAcceptedJobs>({
     queryFn: fetchTotalAcceptedJobs,
     queryKey: ["totalAcceptedJobs"],
   });
@@ -28,7 +44,7 @@ export const useGetTotalRejectedJobs = () => {
     const response = await apiClient.get("/jobs/total-Rejected-jobs");
     return response.data.data;
   };
-  return useQuery({
+  return useQuery<TotalRejectedJobs>({
     queryFn: fetchTotalRejectedJobs,
     queryKey: ["totalRejectedJobs"],
   });
@@ -39,7 +55,7 @@ export const useGetTotalPendingJobs = () => {
     const response = await apiClient.get("/jobs/total-pending-jobs");
     return response.data.data;
   };
-  return useQuery({
+  return useQuery<TotalPendingJobs>({
     queryFn: fetchTotalPendingJobs,
     queryKey: ["totalPendingJobs"],
   });
@@ -50,7 +66,7 @@ export const useGetRecentAppliedJobs = () => {
     const response = await apiClient.get("/jobs/recent-applied-jobs");
     return response.data.data;
   };
-  return useQuery({
+  return useQuery<JobApplication[]>({
     queryFn: fetchRecentAppliedJobs,
     queryKey: ["appliedJobs"],
   });

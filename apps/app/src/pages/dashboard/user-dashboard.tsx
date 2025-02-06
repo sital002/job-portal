@@ -1,17 +1,45 @@
 import SimpleBarChart from "../../components/charts/barchart";
 import SimpleLineChart from "../../components/charts/linechart";
 import BasicPie from "../../components/charts/piechart";
+import {
+  useGetRecentAppliedJobs,
+  useGetTotalAcceptedJobs,
+  useGetTotalAppliedJobs,
+  useGetTotalPendingJobs,
+  useGetTotalRejectedJobs,
+} from "../../hooks/useUserDashbaord";
 
 function UserDashBoard() {
+  const { data: totalAppliedJobs } = useGetTotalAppliedJobs();
+  const { data: totalAcceptedJobs } = useGetTotalAcceptedJobs();
+  const { data: totalRejectedJobs } = useGetTotalRejectedJobs();
+  const { data: totalPendingJobs } = useGetTotalPendingJobs();
+  const { data: recentAppliedJobs } = useGetRecentAppliedJobs();
+
+  console.log("Total applied jobs", totalAppliedJobs);
+  console.log("Total accepted jobs", totalAcceptedJobs);
+  console.log("Total rejected jobs", totalRejectedJobs);
+  console.log("Total pending jobs", totalPendingJobs);
+  console.log("Recent applied jobs", recentAppliedJobs);
+
   return (
     <div>
       <h1>User Dashboard</h1>
       <p>Here you can see your profile and other user-specific information</p>
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-gray-200 px-4 py-8">Profile</div>
-        <div className="bg-gray-200 px-4 py-8">Applications</div>
-        <div className="bg-gray-200 px-4 py-8">Bookmarks</div>
-        <div className="bg-gray-200 px-4 py-8">Settings</div>
+        <div className="bg-gray-200 px-4 py-8">
+          Total Applied Jobs {totalAppliedJobs?.totalJobs}
+        </div>
+        <div className="bg-gray-200 px-4 py-8">
+          totalAcceptedJobs {totalAcceptedJobs?.totalAcceptedJobs}
+        </div>
+        <div className="bg-gray-200 px-4 py-8">
+          {" "}
+          totalPendingJobs {totalPendingJobs?.totalPendingJobs}
+        </div>
+        <div className="bg-gray-200 px-4 py-8">
+          totalRejectedJobs {totalRejectedJobs?.totalRejectedJobs}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-3">
         <div className="bg-gray-200 px-4 py-8">

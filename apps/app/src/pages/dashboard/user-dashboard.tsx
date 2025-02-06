@@ -1,6 +1,7 @@
 import SimpleBarChart from "../../components/charts/barchart";
 import SimpleLineChart from "../../components/charts/linechart";
 import BasicPie from "../../components/charts/piechart";
+import JobApplicationsTable from "../../components/dashboard/recent-applied-jobs-table";
 import {
   useGetRecentAppliedJobs,
   useGetTotalAcceptedJobs,
@@ -54,32 +55,7 @@ function UserDashBoard() {
       </div>
       <div>
         <h1>Recent jobs</h1>
-        <table className="border-collapse border border-green-800">
-          <tr>
-            <th>Job Title</th>
-            <th>Company</th>
-            <th>Location</th>
-            <th>Salary</th>
-          </tr>
-          <tr>
-            <td>Software Engineer</td>
-            <td>Google</td>
-            <td>Mountain View, CA</td>
-            <td>$150,000</td>
-          </tr>
-          <tr>
-            <td>Product Manager</td>
-            <td>Facebook</td>
-            <td>Menlo Park, CA</td>
-            <td>$200,000</td>
-          </tr>
-          <tr>
-            <td>UX Designer</td>
-            <td>Apple</td>
-            <td>Cupertino, CA</td>
-            <td>$120,000</td>
-          </tr>
-        </table>
+        <JobApplicationsTable applications={recentAppliedJobs || []} />
       </div>
     </div>
   );

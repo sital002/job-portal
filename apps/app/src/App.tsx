@@ -22,6 +22,7 @@ import SingleAppliedJobs from "./pages/applied-jobs/single-applied-job";
 import RecruiterDashboard from "./pages/dashboard/recruiter-dashboard";
 import RecruitersApplicant from "./pages/recruiters-job/recruiter-applicants";
 import RecruitersApplicantSingle from "./pages/recruiters-job/recruiter-single-applicant";
+import UserDashBoard from "./pages/dashboard/user-dashboard";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
         {/* Protected User Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route path="dashboard" element={<UserDashBoard />} />
           <Route path="jobs" element={<JobPage />} />
           <Route path="jobs/:jobId" element={<SingleJob />} />
           <Route path="jobs/appliedJobs" element={<AppliedJobs />} />

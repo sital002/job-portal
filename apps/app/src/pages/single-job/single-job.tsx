@@ -31,7 +31,7 @@ const SingleJob: React.FC = () => {
   useEffect(() => {
     if (appliedJobs) {
       setIsApplied(
-        appliedJobs.some((el: JobApplication) => el.job._id === jobId)
+        appliedJobs.some((el: JobApplication) => el.job?._id === jobId)
       );
     }
   }, [appliedJobs, jobId]);

@@ -20,8 +20,7 @@ export const BookMarkPage = () => {
       {isLoading && <p>Loading...</p>}
       {error && <p>{error.message}</p>}
 
-      {bookmarks ? (
-        bookmarks.length > 0 &&
+      {bookmarks.length > 0 ? (
         bookmarks?.map((job: Data, index: number) => (
           <motion.div
             key={job._id.toString()}
@@ -48,8 +47,13 @@ export const BookMarkPage = () => {
           </motion.div>
         ))
       ) : (
-        <div>
-          <h1>No data found</h1>
+        <div className="flex justify-center items-center h-96">
+          <h1 className="text-3xl font-bold">
+            No data found Try Adding Jobs to{" "}
+            <Link to={"/jobs"} className="text-blue-500 underline">
+              BookMark
+            </Link>{" "}
+          </h1>
         </div>
       )}
     </div>

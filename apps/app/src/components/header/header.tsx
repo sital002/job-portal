@@ -32,10 +32,10 @@ const Header: React.FC = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="space-x-6"
+          className="flex justify-between items-center space-x-4"
         >
           {user?.role === "USER" && (
-            <div>
+            <div className="flex space-x-4">
               {" "}
               <NavLink
                 to={"/jobs"}

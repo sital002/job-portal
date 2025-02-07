@@ -2,11 +2,32 @@ import { useParams } from "react-router";
 import { useGetApplications } from "../../hooks/useGetApplications";
 import { Link } from "react-router-dom";
 
+import { useUpdateApplicationStatus } from "../../hooks/useGetApplicationById";
+const RecruiterStatus = ["REJECTED", "INTERVIEWING", "HIRED"];
+
 function RecruitersApplicant() {
   const { jobId } = useParams();
 
   const { data: appliedJobs, isLoading: isAppliedJobLoading } =
     useGetApplications(jobId as string);
+
+  const {
+    mutate: UpdateStatus,
+    isPending,
+    error,
+  } = useUpdateApplicationStatus();
+
+  const handleRecruiterStatus = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    id: string
+  ) => {
+    try {
+      // console.log(currentRecruiteStatus);
+      await UpdateStatus({ status: e.target.value, applicationId: id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isAppliedJobLoading) return <p>Loading...</p>;
 
@@ -29,6 +50,9 @@ function RecruitersApplicant() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Action
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Recruiter Action
               </th>
             </tr>
           </thead>
@@ -61,13 +85,34 @@ function RecruitersApplicant() {
                     {new Date(job.createdAt).toLocaleDateString()}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ml-2">
                   <Link
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"
                     to={`/recruiter/applicant/${job._id}`}
                   >
                     View
                   </Link>
+                </td>
+                <td>
+                  {" "}
+                  <div>
+                    <select
+                      disabled={isPending}
+                      className="border border-gray-300 rounded-md p-1"
+                      name="recruiteStatus"
+                      onChange={(e) => handleRecruiterStatus(e, job._id)}
+                    >
+                      <option value="">Select Status</option>
+                      {RecruiterStatus.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                    {error && (
+                      <p className="text-red-500 text-sm">{error.message}</p>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

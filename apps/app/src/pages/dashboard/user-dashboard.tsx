@@ -62,7 +62,12 @@ function UserDashBoard() {
         <div className="bg-gray-200 px-4 py-8">
           Pie Chart
           <SimpleBarChart />
-          <BasicPie />
+          <BasicPie
+            totalAcceptedJobs={totalAcceptedJobs?.totalAcceptedJobs ?? 0}
+            totalAppliedJobs={totalAppliedJobs?.totalJobs ?? 0}
+            totalPendingJobs={totalPendingJobs?.totalPendingJobs ?? 0}
+            totalRejectedJobs={totalRejectedJobs?.totalRejectedJobs ?? 0}
+          />
         </div>
       </div>
       <div>

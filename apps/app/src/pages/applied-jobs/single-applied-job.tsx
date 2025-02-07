@@ -18,7 +18,7 @@ function SingleAppliedJobs() {
     );
   }
 
-  if (!data) {
+  if (!data?.job) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p className="text-xl text-gray-600">No applied jobs found</p>
@@ -31,7 +31,9 @@ function SingleAppliedJobs() {
       <h1 className="text-3xl font-bold mb-8 text-center">Applied Jobs</h1>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <Link className="text-blue-600" to={`/jobs/appliedJobs`}>G0 Back</Link>
+        <Link className="text-blue-600" to={`/jobs/appliedJobs`}>
+          G0 Back
+        </Link>
         <div className="p-6">
           <h2 className="text-xl font-semibold mb-2 text-blue-600">
             {data.job.title}

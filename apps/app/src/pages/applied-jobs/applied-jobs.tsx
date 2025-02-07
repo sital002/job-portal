@@ -1,9 +1,18 @@
 import { useGetAppliedJob } from "../../hooks/useGetAppliedJob";
 import { Link } from "react-router-dom";
 
-
 function AppliedJobsTable() {
   const { data, isLoading } = useGetAppliedJob();
+  const validApplications = data?.filter((app) => app.job);
+
+  // If there are no valid applications, don't render the table
+  if (validApplications?.length === 0) {
+    return (
+      <p className="text-gray-500 text-center">
+        No job applications available.
+      </p>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -43,14 +52,14 @@ function AppliedJobsTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data?.map((job, index: number) => (
+            {validApplications?.map((job, index: number) => (
               <tr
                 key={index}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
               >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    {job.job.title}
+                    {job.job?.title}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

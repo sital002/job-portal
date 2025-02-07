@@ -26,6 +26,14 @@ interface JobApplicationsTableProps {
 }
 
 const JobApplicationsTable = ({ applications }: JobApplicationsTableProps) => {
+  // Filter applications that have a valid job
+  const validApplications = applications.filter((app) => app.job);
+
+  // If there are no valid applications, don't render the table
+  if (validApplications.length === 0) {
+    return <p className="text-gray-500 text-center">No job applications available.</p>;
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-300">
@@ -40,7 +48,7 @@ const JobApplicationsTable = ({ applications }: JobApplicationsTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {applications.map((app) => (
+          {validApplications.map((app) => (
             <tr key={app._id} className="border-t border-gray-300">
               <td className="px-4 py-2">{app.applicant}</td>
               <td className="px-4 py-2">{app.job.title}</td>
@@ -79,6 +87,7 @@ const JobApplicationsTable = ({ applications }: JobApplicationsTableProps) => {
     </div>
   );
 };
+
 
 const getStatusColor = (status: string): string => {
   switch (status.toUpperCase()) {

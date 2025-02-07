@@ -16,6 +16,9 @@ type TotalRejectedJobs = {
 type TotalPendingJobs = {
   totalPendingJobs: number;
 };
+type TotalJobs = {
+  totalJobs: number;
+};
 
 export const useGetTotalAppliedJobs = () => {
   const fetchTotalAppliedJobs = async () => {
@@ -69,5 +72,16 @@ export const useGetRecentAppliedJobs = () => {
   return useQuery<JobApplication[]>({
     queryFn: fetchRecentAppliedJobs,
     queryKey: ["appliedJobs"],
+  });
+};
+
+export const useGetTotalJobs = () => {
+  const fetchTotalJobs = async () => {
+    const response = await apiClient.get("/jobs/total-jobs");
+    return response.data.data;
+  };
+  return useQuery<TotalJobs>({
+    queryFn: fetchTotalJobs,
+    queryKey: ["totalJobs"],
   });
 };

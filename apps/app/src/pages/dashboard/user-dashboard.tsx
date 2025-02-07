@@ -27,7 +27,7 @@ function UserDashBoard() {
   console.log("Total jobs", totalJobs);
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <h1>User Dashboard</h1>
       <p>Here you can see your profile and other user-specific information</p>
       <div className="grid grid-cols-5 gap-4">

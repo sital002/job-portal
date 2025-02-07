@@ -32,7 +32,7 @@ export default function SimpleLineChart({
   ];
   return (
     <LineChart
-      width={800}
+      width={700}
       height={500}
       series={[
         // { data: pData, label: "pv" },

@@ -131,3 +131,15 @@ export const verifyEmail = asyncApiHandler(async (req: Request, res: Response) =
   if (!verifiedEmail) throw new ApiError(500, "Error verifying email");
   return res.status(200).send("Email verified successfully");
 });
+
+export const editUserDetail = asyncApiHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw new ApiError(401, "You are not logged in");
+  const user = await UserModel.findById(req.user._id);
+  if (!user) throw new ApiError(400, "User doesn't exists");
+  const { displayName, email } = req.body;
+  user.displayName = displayName;
+  user.email = email;
+  const updatedUser = await user.save();
+  if (!updatedUser) throw new ApiError(500, "Error updating user");
+  return res.status(200).json(new ApiResponse("User updated successfully"));
+});

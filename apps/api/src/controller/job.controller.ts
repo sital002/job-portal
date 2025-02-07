@@ -363,3 +363,8 @@ export const getRecentAppliedJobs = asyncApiHandler(async (req, res) => {
   const jobs = await ApplicationModel.find({ applicant: req.user._id }).sort({ createdAt: -1 }).limit(5).populate("job").exec();
   res.status(200).json(new ApiResponse("Jobs retrieved successfully", jobs));
 });
+
+export const getTotalJobs = asyncApiHandler(async (req, res) => {
+  const totalJobs = await JobModel.find().countDocuments();
+  res.status(200).json(new ApiResponse("Total jobs retrieved successfully", { totalJobs }));
+});

@@ -20,6 +20,7 @@ import {
   getRejectedJobs,
   getPendingJobs,
   getRecentAppliedJobs,
+  getTotalJobs,
 } from "../controller/job.controller";
 import { authenticate } from "../middleware/authenticate";
 import upload from "../utils/multer";
@@ -38,9 +39,10 @@ jobRouter.route("/view-application-status/:id").get(authenticate, viewApplicatio
 
 jobRouter.route("/total-applied-jobs").get(authenticate, getAppliedJobsByUser);
 jobRouter.route("/total-accepted-jobs").get(authenticate, getAcceptedJobsByUser);
-jobRouter.route("/total-accepted-jobs").get(authenticate, getRejectedJobs);
+jobRouter.route("/total-rejected-jobs").get(authenticate, getRejectedJobs);
 jobRouter.route("/total-pending-jobs").get(authenticate, getPendingJobs);
 jobRouter.route("/recent-applied-jobs").get(authenticate, getRecentAppliedJobs);
+jobRouter.route("/total-jobs").get(authenticate, getTotalJobs);
 
 // RECRUITER ROUTES
 jobRouter.route("/new").post(authenticate, createJob);
@@ -48,5 +50,7 @@ jobRouter.route("/created-jobs").get(authenticate, getjobsCreatedByRecruiter);
 jobRouter.route("/:id").delete(authenticate, deleteJob).put(authenticate, updateJob).get(authenticate, getJobCreatedByRecruiter);
 jobRouter.route("/application/:id").get(authenticate, getApplicationById).put(authenticate, updateApplication);
 jobRouter.route("/applications/:jobId").get(authenticate, getAllApplications);
+
+// User profile Route
 
 export default jobRouter;

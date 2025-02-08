@@ -1,28 +1,49 @@
-import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import * as React from "react";
+import { BarChart } from "@mui/x-charts/BarChart";
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const xLabels = [
-  'Page A',
-  'Page B',
-  'Page C',
-  'Page D',
-  'Page E',
-  'Page F',
-  'Page G',
-];
+type SimpleBarChartProps = {
+  totaljobs: number;
+  totalAcceptedJobs: number;
+  totalRejectedJobs: number;
+  totalPendingJobs: number;
+  totalAppliedJobs: number;
+};
 
-export default function SimpleBarChart() {
+// const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const xLabels = ["Accepted Jobs", "Rejected Jobs", "Pending Jobs", "Applied Jobs"];
+
+
+export default function SimpleBarChart({
+  totaljobs,
+  totalAcceptedJobs,
+  totalRejectedJobs,
+  totalPendingJobs,
+  totalAppliedJobs,
+}: SimpleBarChartProps) {
+  const Data = [
+    totalAcceptedJobs,
+    totalRejectedJobs,
+    totalPendingJobs,
+    totalAppliedJobs,
+  ];
   return (
     <BarChart
-      width={500}
-      height={300}
+      width={550}
+      height={350}
       series={[
-        { data: pData, label: 'pv', id: 'pvId' },
-        { data: uData, label: 'uv', id: 'uvId' },
+        {
+          data: Data,
+          label: "jobs",
+          color: "#3f51b5",
+        },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ data: xLabels, scaleType: "band" }]}
+      yAxis={[
+        {
+          min: 0, // Set minimum value for Y-axis
+          max: totaljobs, // Set maximum value for Y-axis // Set interval for Y-axis
+        },
+      ]}
     />
   );
 }

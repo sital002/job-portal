@@ -31,12 +31,16 @@ const JobApplicationsTable = ({ applications }: JobApplicationsTableProps) => {
 
   // If there are no valid applications, don't render the table
   if (validApplications.length === 0) {
-    return <p className="text-gray-500 text-center">No job applications available.</p>;
+    return (
+      <p className="text-gray-500 text-center">
+        No job applications available.
+      </p>
+    );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-300">
+    <div className="overflow-x-auto bg-gray-400 rounded-lg">
+      <table className="min-w-full bg-white border">
         <thead>
           <tr className="bg-gray-100">
             <th className="px-4 py-2 text-left">Applicant ID</th>
@@ -87,7 +91,6 @@ const JobApplicationsTable = ({ applications }: JobApplicationsTableProps) => {
     </div>
   );
 };
-
 
 const getStatusColor = (status: string): string => {
   switch (status.toUpperCase()) {

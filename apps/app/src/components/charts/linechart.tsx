@@ -1,12 +1,11 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 
-
 // const pData = [2400, 1398, 9800, 3908];
 const xLabels = [
-  "Totla applied jobs",
-  "total accepted jobs",
-  "total rejected jobs",
-  "total pending jobs",
+  "Accepted Jobs",
+  "Rejected Jobs",
+  "Pending Jobs",
+  "Applied Jobs",
 ];
 
 type SimpleLineChartProps = {
@@ -34,10 +33,7 @@ export default function SimpleLineChart({
     <LineChart
       width={700}
       height={500}
-      series={[
-        // { data: pData, label: "pv" },
-        { data: Data, label: "uv" },
-      ]}
+      series={[{ data: Data, label: "jobs" }]}
       xAxis={[{ scaleType: "point", data: xLabels }]}
       yAxis={[
         {

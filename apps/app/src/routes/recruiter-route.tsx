@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import ShimmerHome from "../components/shimmer";
 
 const RecruiterRoute = () => {
   const { user, loading } = useAuth();
   console.log("user", user);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <ShimmerHome />;
   }
   if (!user) {
     return <Navigate to="/login" />;

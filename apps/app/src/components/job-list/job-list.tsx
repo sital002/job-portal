@@ -33,7 +33,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, error, isLoading }) => {
       setDeleteLoading(false);
     }
   }
-  if (isLoading || (loading && !user)) return <p>Loading...</p>;
+  // if (isLoading || (loading && !user)) return <div>loading...</div>;
   if (isDeleteLoading) return <p>Deleting...</p>;
   return (
     <div className="flex-grow">

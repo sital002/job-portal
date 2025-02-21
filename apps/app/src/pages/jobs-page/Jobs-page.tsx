@@ -5,6 +5,7 @@ import FilterSidebar from "../../components/filter-sidebar/filter-sidebar";
 import { motion } from "framer-motion";
 // import SimplePagination from "../../components/pagination-component";
 import useJobs from "../../hooks/useJobs";
+import ShimmerHome from "../../components/shimmer";
 export type Filter = {
   title: string;
   location: string;
@@ -34,6 +35,8 @@ const JobPage: React.FC = () => {
   //   // Here you would typically fetch data for the new page
   //   console.log(`Fetching data for page ${page}`);
   // };
+
+  if (isLoading) return <ShimmerHome />;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-800">

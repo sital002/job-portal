@@ -44,4 +44,6 @@ cd job-portal
 ### Screenshots
 ![image](https://github.com/user-attachments/assets/384ca011-8e5c-4683-b082-1fedcafcb304)
 ![image](https://github.com/user-attachments/assets/40ea1a19-b96b-4183-a948-393c3b1c4629)
+![image](https://github.com/user-attachments/assets/7af65cea-8ffc-4b6c-a03f-8431ee9dca87)
+
 
